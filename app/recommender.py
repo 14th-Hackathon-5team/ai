@@ -4,6 +4,13 @@ from app.univ_service import recommend_universities
 from app.llm_service import generate_ai_recommendation
 
 
+PRIORITY_ORDER = {
+    "HIGH": 0,
+    "MEDIUM": 1,
+    "LOW": 2,
+}
+
+
 def find_candidate(
     recommendation_type: str,
     title: str,
@@ -62,18 +69,32 @@ def recommend(user: UserProfile):
         final_recommendations.append(
             {
                 "type": recommendation_type,
-                "priority": item.get(
+
+                # AI가 만든 priority를 사용하지 않습니다.
+                # law_service 또는 univ_service가 계산한 값을 사용합니다.
+                "priority": candidate.get(
                     "priority",
-                    candidate.get("priority"),
+                    "LOW",
                 ),
+
                 "title": title,
-                "reason": item.get(
+
+                # 날짜와 상태가 포함된 규칙 기반 reason을 우선 사용합니다.
+                "reason": candidate.get(
                     "reason",
-                    candidate.get("reason"),
+                    item.get("reason"),
                 ),
+
                 "detail": candidate.get("detail"),
             }
         )
+
+    final_recommendations.sort(
+        key=lambda item: PRIORITY_ORDER.get(
+            item.get("priority"),
+            3,
+        )
+    )
 
     return {
         "userId": user.userId,

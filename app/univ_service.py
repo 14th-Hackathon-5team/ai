@@ -44,9 +44,31 @@ def can_recommend_university(user: UserProfile) -> bool:
     return user.userStatus.upper() in allowed_status
 
 
+def get_university_priority(
+    today: date,
+    start: date,
+    end: date,
+) -> str:
+    if start <= today <= end:
+        days_until_deadline = (end - today).days
+
+        if days_until_deadline <= 14:
+            return "HIGH"
+
+        return "MEDIUM"
+
+    days_until_start = (start - today).days
+
+    if days_until_start <= 21:
+        return "MEDIUM"
+
+    return "LOW"
+
+
 def make_result(
     university: dict,
     score: int,
+    priority: str,
     reason: str,
 ):
     eligibility = university.get(
@@ -55,6 +77,9 @@ def make_result(
     )
 
     return {
+        "type": "UNIVERSITY",
+        "title": university.get("schoolName"),
+        "priority": priority,
         "schoolName": university.get("schoolName"),
         "region": university.get("region"),
         "universityType": university.get(
@@ -85,6 +110,7 @@ def make_result(
         "evaluationRatio": university.get(
             "evaluation_ratio"
         ),
+        "detail": university,
     }
 
 
@@ -96,11 +122,9 @@ def recommend_universities(
         return []
 
     recommendations = []
-
     current_topik = get_topik_level(
         user.currentTopikLevel
     )
-
     today = date.today()
 
     for university in UNIV_DATA:
@@ -124,17 +148,6 @@ def recommend_universities(
         ):
             continue
 
-        score = 0
-        reasons = []
-
-        if required_topik is not None:
-            score += 50
-
-            reasons.append(
-                f"현재 TOPIK {current_topik}급으로 "
-                f"TOPIK {required_topik}급 이상 조건을 충족합니다."
-            )
-
         application = university.get(
             "application_schedule",
             {},
@@ -143,31 +156,77 @@ def recommend_universities(
         start_date = application.get("start")
         end_date = application.get("end")
 
-        if start_date and end_date:
-            start = date.fromisoformat(start_date)
-            end = date.fromisoformat(end_date)
+        if not start_date or not end_date:
+            continue
 
-            if start <= today <= end:
-                score += 30
-                reasons.append("현재 원서접수 기간입니다.")
+        start = date.fromisoformat(start_date)
+        end = date.fromisoformat(end_date)
 
-            elif today < start:
-                score += 15
-                reasons.append(
-                    f"원서접수는 {start_date}부터 시작합니다."
-                )
+        # 접수가 끝난 대학은 추천하지 않습니다.
+        if today > end:
+            continue
+
+        score = 0
+        reasons = []
+
+        if required_topik is not None:
+            score += 50
+            reasons.append(
+                f"현재 TOPIK {current_topik}급으로 "
+                f"TOPIK {required_topik}급 이상 조건을 충족합니다."
+            )
+
+        priority = get_university_priority(
+            today=today,
+            start=start,
+            end=end,
+        )
+
+        if start <= today <= end:
+            days_until_deadline = (end - today).days
+
+            score += 30
+            reasons.append(
+                f"현재 원서접수 기간이며 "
+                f"마감일까지 {days_until_deadline}일 남았습니다."
+            )
+
+        else:
+            days_until_start = (start - today).days
+
+            if days_until_start <= 21:
+                score += 20
+            else:
+                score += 10
+
+            reasons.append(
+                f"원서접수가 {days_until_start}일 후인 "
+                f"{start_date}에 시작합니다."
+            )
 
         recommendations.append(
             make_result(
                 university=university,
                 score=score,
+                priority=priority,
                 reason=" ".join(reasons),
             )
         )
 
+    priority_order = {
+        "HIGH": 0,
+        "MEDIUM": 1,
+        "LOW": 2,
+    }
+
     recommendations.sort(
-        key=lambda item: item["matchScore"],
-        reverse=True,
+        key=lambda item: (
+            priority_order.get(
+                item.get("priority"),
+                3,
+            ),
+            -item.get("matchScore", 0),
+        )
     )
 
     return recommendations[:limit]

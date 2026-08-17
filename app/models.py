@@ -17,5 +17,7 @@ class UserProfile(BaseModel):
     housingType: Optional[str] = None
     isParentSupported: Optional[bool] = None
     partTimeStatus: Optional[str] = None
+    partTimeStartDate: Optional[date] = None
+    hasPartTimePermit: Optional[bool] = None
     currentTopikLevel: str
     targetTopikLevel: str
