@@ -1,0 +1,173 @@
+import json
+import re
+from datetime import date
+from pathlib import Path
+
+from app.models import UserProfile
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+UNIV_PATH = BASE_DIR / "data" / "univ_info.json"
+
+with open(UNIV_PATH, "r", encoding="utf-8") as f:
+    UNIV_DATA = json.load(f)
+
+
+def get_topik_level(level: str) -> int:
+    match = re.search(r"([1-6])", level)
+
+    if match:
+        return int(match.group(1))
+
+    return 0
+
+
+def get_required_topik(language: str):
+    match = re.search(
+        r"TOPIK\s*([1-6])\s*급",
+        language,
+        re.IGNORECASE,
+    )
+
+    if match:
+        return int(match.group(1))
+
+    return None
+
+
+def can_recommend_university(user: UserProfile) -> bool:
+    allowed_status = {
+        "BEFORE_ENTRY",
+        "LANGUAGE_STUDENT",
+    }
+
+    return user.userStatus.upper() in allowed_status
+
+
+def make_result(
+    university: dict,
+    score: int,
+    reason: str,
+):
+    eligibility = university.get(
+        "admission_eligibility",
+        {},
+    )
+
+    return {
+        "schoolName": university.get("schoolName"),
+        "region": university.get("region"),
+        "universityType": university.get(
+            "university_type"
+        ),
+        "matchScore": score,
+        "reason": reason,
+        "applicationSchedule": university.get(
+            "application_schedule"
+        ),
+        "documentSubmissionSchedule": university.get(
+            "document_submission_schedule"
+        ),
+        "interview": university.get("interview"),
+        "finalResultDate": university.get(
+            "final_result_date"
+        ),
+        "nationalityRequirement": eligibility.get(
+            "nationality"
+        ),
+        "academicRequirement": eligibility.get(
+            "academic"
+        ),
+        "languageRequirement": eligibility.get(
+            "language"
+        ),
+        "documents": university.get("documents"),
+        "evaluationRatio": university.get(
+            "evaluation_ratio"
+        ),
+    }
+
+
+def recommend_universities(
+    user: UserProfile,
+    limit: int = 5,
+):
+    if not can_recommend_university(user):
+        return []
+
+    recommendations = []
+
+    current_topik = get_topik_level(
+        user.currentTopikLevel
+    )
+
+    today = date.today()
+
+    for university in UNIV_DATA:
+        eligibility = university.get(
+            "admission_eligibility",
+            {},
+        )
+
+        language = eligibility.get(
+            "language",
+            "",
+        )
+
+        required_topik = get_required_topik(
+            language
+        )
+
+        if (
+            required_topik is not None
+            and current_topik < required_topik
+        ):
+            continue
+
+        score = 0
+        reasons = []
+
+        if required_topik is not None:
+            score += 50
+
+            reasons.append(
+                f"현재 TOPIK {current_topik}급으로 "
+                f"TOPIK {required_topik}급 이상 조건을 충족합니다."
+            )
+
+        application = university.get(
+            "application_schedule",
+            {},
+        )
+
+        start_date = application.get("start")
+        end_date = application.get("end")
+
+        if start_date and end_date:
+            start = date.fromisoformat(start_date)
+            end = date.fromisoformat(end_date)
+
+            if start <= today <= end:
+                score += 30
+                reasons.append("현재 원서접수 기간입니다.")
+
+            elif today < start:
+                score += 15
+                reasons.append(
+                    f"원서접수는 {start_date}부터 시작합니다."
+                )
+
+        recommendations.append(
+            make_result(
+                university=university,
+                score=score,
+                reason=" ".join(reasons),
+            )
+        )
+
+    recommendations.sort(
+        key=lambda item: item["matchScore"],
+        reverse=True,
+    )
+
+    return recommendations[:limit]
