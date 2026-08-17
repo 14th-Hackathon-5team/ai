@@ -20,20 +20,29 @@ if not api_key:
 client = Groq(api_key=api_key)
 
 
-def generate_ai_recommendation(
+def select_optional_recommendations(
     user: UserProfile,
     required_recommendations: list,
     optional_recommendations: list,
     optional_limit: int,
 ):
-    user_data = user.model_dump(mode="json")
+    if (
+        optional_limit <= 0
+        or not optional_recommendations
+    ):
+        return []
+
+    user_data = user.model_dump(
+        mode="json"
+    )
 
     required_candidates = [
         {
             "type": item.get("type"),
             "title": item.get("title"),
-            "priority": item.get("priority"),
-            "reason": item.get("reason"),
+            "priority": item.get(
+                "priority"
+            ),
         }
         for item in required_recommendations
     ]
@@ -42,9 +51,13 @@ def generate_ai_recommendation(
         {
             "type": item.get("type"),
             "title": item.get("title"),
-            "priority": item.get("priority"),
-            "matchScore": item.get("matchScore"),
+            "priority": item.get(
+                "priority"
+            ),
             "reason": item.get("reason"),
+            "matchScore": item.get(
+                "matchScore"
+            ),
         }
         for item in optional_recommendations
     ]
@@ -53,50 +66,29 @@ def generate_ai_recommendation(
 사용자 프로필:
 {json.dumps(user_data, ensure_ascii=False, indent=2)}
 
-반드시 포함되는 HIGH 추천:
+이미 자동 포함되는 HIGH 추천:
 {json.dumps(required_candidates, ensure_ascii=False, indent=2)}
 
 선택 가능한 MEDIUM/LOW 추천:
 {json.dumps(optional_candidates, ensure_ascii=False, indent=2)}
 
-당신은 한국에 거주하거나 유학하려는 외국인을 위한
-정보 추천 AI입니다.
+제공된 MEDIUM/LOW 후보 중 사용자에게 유용한 항목을
+최대 {optional_limit}개 선택하세요.
 
-HIGH 추천은 애플리케이션이 자동으로 최종 결과에 포함합니다.
-따라서 recommendations에는 HIGH 추천을 반환하지 마세요.
+HIGH 추천은 애플리케이션이 자동으로 포함하므로
+반환하지 마세요.
 
-MEDIUM/LOW 후보 중 사용자에게 유용한 항목만 선택하세요.
-선택 가능한 추천은 최대 {optional_limit}개입니다.
+후보에 없는 추천을 생성하지 마세요.
+title과 type은 후보의 값을 그대로 사용하세요.
+priority와 reason을 새로 작성하지 마세요.
 
-제공된 후보에 없는 추천을 새로 만들지 마세요.
-title은 후보의 실제 title을 그대로 사용하세요.
-title을 수정하거나 여러 항목을 하나로 묶지 마세요.
-
-priority는 후보에 제공된 값을 그대로 사용하세요.
-priority를 새로 판단하거나 변경하지 마세요.
-
-법률의 실제 내용, 기한, 벌칙, 절차를 생성하지 마세요.
-대학의 실제 일정, 서류, 자격을 생성하지 마세요.
-사용자 프로필에 없는 정보는 추측하지 마세요.
-
-대학의 TOPIK 조건만 확인된 경우에는
-TOPIK 조건을 충족한다고만 표현하세요.
-전체 입학 자격을 충족한다고 단정하지 마세요.
-
-summary와 reason은 자연스러운 한국어로 작성하세요.
-일본어와 중국어 문자를 혼용하지 마세요.
-D2와 D4는 각각 D-2와 D-4 체류자격으로 표현하세요.
-
-응답은 반드시 아래 JSON 형식으로만 반환하세요.
+응답은 반드시 다음 JSON 형식으로만 반환하세요.
 
 {{
-  "summary": "사용자의 현재 상황에 대한 짧은 한국어 설명",
   "recommendations": [
     {{
       "type": "LAW 또는 UNIVERSITY",
-      "priority": "MEDIUM 또는 LOW",
-      "title": "후보에 존재하는 실제 title",
-      "reason": "사용자에게 해당 정보가 유용한 이유"
+      "title": "후보에 존재하는 실제 title"
     }}
   ]
 }}
@@ -108,12 +100,10 @@ D2와 D4는 각각 D-2와 D-4 체류자격으로 표현하세요.
             {
                 "role": "system",
                 "content": (
-                    "You are a recommendation assistant "
-                    "for foreign residents and international "
-                    "students in Korea. Select only from the "
-                    "provided optional candidates. Never change "
-                    "titles or priorities. Respond in natural "
-                    "Korean and JSON only."
+                    "Select only from the provided "
+                    "optional recommendation candidates. "
+                    "Never invent or modify titles. "
+                    "Respond with JSON only."
                 ),
             },
             {
@@ -127,11 +117,19 @@ D2와 D4는 각각 D-2와 D-4 체류자격으로 표현하세요.
         },
     )
 
-    content = response.choices[0].message.content
+    content = (
+        response.choices[0]
+        .message.content
+    )
 
     if not content:
         raise ValueError(
             "Groq API 응답 내용이 비어 있습니다."
         )
 
-    return json.loads(content)
+    parsed = json.loads(content)
+
+    return parsed.get(
+        "recommendations",
+        [],
+    )

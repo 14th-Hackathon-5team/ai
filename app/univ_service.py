@@ -3,6 +3,9 @@ import re
 from datetime import date
 from pathlib import Path
 
+from app.message_service import (
+    build_university_reason,
+)
 from app.models import UserProfile
 
 
@@ -13,8 +16,8 @@ UNIVERSITY_HIGH_DAYS = 7
 UNIVERSITY_MEDIUM_DAYS = 21
 
 
-with open(UNIV_PATH, "r", encoding="utf-8") as f:
-    UNIV_DATA = json.load(f)
+with open(UNIV_PATH, "r", encoding="utf-8") as file:
+    UNIV_DATA = json.load(file)
 
 
 def get_topik_level(level: str) -> int:
@@ -26,7 +29,9 @@ def get_topik_level(level: str) -> int:
     return 0
 
 
-def get_required_topik(language: str):
+def get_required_topik(
+    language: str,
+):
     match = re.search(
         r"TOPIK\s*([1-6])\s*급",
         language,
@@ -42,12 +47,15 @@ def get_required_topik(language: str):
 def can_recommend_university(
     user: UserProfile,
 ) -> bool:
-    allowed_status = {
+    allowed_statuses = {
         "BEFORE_ENTRY",
         "LANGUAGE_STUDENT",
     }
 
-    return user.userStatus.upper() in allowed_status
+    return (
+        user.userStatus.upper()
+        in allowed_statuses
+    )
 
 
 def get_university_priority(
@@ -59,22 +67,38 @@ def get_university_priority(
         return "EXPIRED"
 
     if start <= today <= end:
-        days_until_deadline = (end - today).days
+        days_until_deadline = (
+            end - today
+        ).days
 
-        if days_until_deadline <= UNIVERSITY_HIGH_DAYS:
+        if (
+            days_until_deadline
+            <= UNIVERSITY_HIGH_DAYS
+        ):
             return "HIGH"
 
-        if days_until_deadline <= UNIVERSITY_MEDIUM_DAYS:
+        if (
+            days_until_deadline
+            <= UNIVERSITY_MEDIUM_DAYS
+        ):
             return "MEDIUM"
 
         return "LOW"
 
-    days_until_start = (start - today).days
+    days_until_start = (
+        start - today
+    ).days
 
-    if days_until_start <= UNIVERSITY_HIGH_DAYS:
+    if (
+        days_until_start
+        <= UNIVERSITY_HIGH_DAYS
+    ):
         return "HIGH"
 
-    if days_until_start <= UNIVERSITY_MEDIUM_DAYS:
+    if (
+        days_until_start
+        <= UNIVERSITY_MEDIUM_DAYS
+    ):
         return "MEDIUM"
 
     return "LOW"
@@ -86,44 +110,60 @@ def make_result(
     priority: str,
     reason: str,
 ):
-    eligibility = university.get(
-        "admission_eligibility",
-        {},
+    eligibility = (
+        university.get(
+            "admission_eligibility"
+        )
+        or {}
     )
 
     return {
         "type": "UNIVERSITY",
-        "title": university.get("schoolName"),
+        "title": university.get(
+            "schoolName"
+        ),
         "priority": priority,
-        "schoolName": university.get("schoolName"),
+        "schoolName": university.get(
+            "schoolName"
+        ),
         "region": university.get("region"),
         "universityType": university.get(
             "university_type"
         ),
         "matchScore": score,
         "reason": reason,
-        "applicationSchedule": university.get(
-            "application_schedule"
+        "applicationSchedule": (
+            university.get(
+                "application_schedule"
+            )
         ),
-        "documentSubmissionSchedule": university.get(
-            "document_submission_schedule"
+        "documentSubmissionSchedule": (
+            university.get(
+                "document_submission_schedule"
+            )
         ),
-        "interview": university.get("interview"),
+        "interview": university.get(
+            "interview"
+        ),
         "finalResultDate": university.get(
             "final_result_date"
         ),
-        "nationalityRequirement": eligibility.get(
-            "nationality"
+        "nationalityRequirement": (
+            eligibility.get("nationality")
         ),
-        "academicRequirement": eligibility.get(
-            "academic"
+        "academicRequirement": (
+            eligibility.get("academic")
         ),
-        "languageRequirement": eligibility.get(
-            "language"
+        "languageRequirement": (
+            eligibility.get("language")
         ),
-        "documents": university.get("documents"),
-        "evaluationRatio": university.get(
-            "evaluation_ratio"
+        "documents": university.get(
+            "documents"
+        ),
+        "evaluationRatio": (
+            university.get(
+                "evaluation_ratio"
+            )
         ),
         "detail": university,
     }
@@ -144,9 +184,11 @@ def recommend_universities(
     )
 
     for university in UNIV_DATA:
-        eligibility = university.get(
-            "admission_eligibility",
-            {},
+        eligibility = (
+            university.get(
+                "admission_eligibility"
+            )
+            or {}
         )
 
         language = eligibility.get(
@@ -164,19 +206,27 @@ def recommend_universities(
         ):
             continue
 
-        application = university.get(
-            "application_schedule",
-            {},
+        application = (
+            university.get(
+                "application_schedule"
+            )
+            or {}
         )
 
-        start_date = application.get("start")
+        start_date = application.get(
+            "start"
+        )
         end_date = application.get("end")
 
         if not start_date or not end_date:
             continue
 
-        start = date.fromisoformat(start_date)
-        end = date.fromisoformat(end_date)
+        start = date.fromisoformat(
+            start_date
+        )
+        end = date.fromisoformat(
+            end_date
+        )
 
         priority = get_university_priority(
             today=today,
@@ -188,28 +238,12 @@ def recommend_universities(
             continue
 
         score = 0
-        reasons = []
 
         if required_topik is not None:
             score += 50
-            reasons.append(
-                f"현재 TOPIK {current_topik}급으로 "
-                f"TOPIK {required_topik}급 이상 조건을 "
-                "충족합니다."
-            )
 
         if start <= today <= end:
-            days_until_deadline = (
-                end - today
-            ).days
-
             score += 30
-            reasons.append(
-                "현재 원서접수 기간이며 "
-                f"마감일까지 {days_until_deadline}일 "
-                "남았습니다."
-            )
-
         else:
             days_until_start = (
                 start - today
@@ -223,17 +257,20 @@ def recommend_universities(
             else:
                 score += 10
 
-            reasons.append(
-                f"원서접수가 {days_until_start}일 후인 "
-                f"{start_date}에 시작합니다."
-            )
+        reason = build_university_reason(
+            current_topik=current_topik,
+            required_topik=required_topik,
+            start=start,
+            end=end,
+            today=today,
+        )
 
         recommendations.append(
             make_result(
                 university=university,
                 score=score,
                 priority=priority,
-                reason=" ".join(reasons),
+                reason=reason,
             )
         )
 
@@ -249,7 +286,10 @@ def recommend_universities(
                 item.get("priority"),
                 3,
             ),
-            -item.get("matchScore", 0),
+            -item.get(
+                "matchScore",
+                0,
+            ),
         )
     )
 
