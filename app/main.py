@@ -1,8 +1,16 @@
 import json
 import textwrap
 
+from fastapi import FastAPI
+
 from app.models import UserProfile
 from app.recommender import recommend
+
+
+app = FastAPI(
+    title="AI Buddy API",
+    version="1.0.0",
+)
 
 
 LINE_WIDTH = 60
@@ -17,6 +25,20 @@ TYPE_LABELS = {
     "LAW": "법률·행정",
     "UNIVERSITY": "대학교",
 }
+
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "ok",
+    }
+
+
+@app.post("/recommend")
+def create_recommendation(
+    user: UserProfile,
+):
+    return recommend(user)
 
 
 def print_wrapped(
