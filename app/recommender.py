@@ -10,84 +10,131 @@ PRIORITY_ORDER = {
     "LOW": 2,
 }
 
+MAX_RECOMMENDATIONS = 5
+
+
+def candidate_key(candidate: dict):
+    return (
+        candidate.get("type"),
+        candidate.get("title"),
+    )
+
 
 def find_candidate(
     recommendation_type: str,
     title: str,
-    legal_recommendations: list,
-    university_recommendations: list,
+    candidates: list,
 ):
-    if recommendation_type == "LAW":
-        candidates = legal_recommendations
-
-    elif recommendation_type == "UNIVERSITY":
-        candidates = university_recommendations
-
-    else:
-        return None
+    target_key = (
+        recommendation_type,
+        title,
+    )
 
     for candidate in candidates:
-        if candidate.get("title") == title:
+        if candidate_key(candidate) == target_key:
             return candidate
 
     return None
 
 
-def recommend(user: UserProfile):
-    legal_recommendations = recommend_laws(user)
+def make_final_item(
+    candidate: dict,
+    ai_reason: str | None = None,
+):
+    return {
+        "type": candidate.get("type"),
+        "priority": candidate.get(
+            "priority",
+            "LOW",
+        ),
+        "title": candidate.get("title"),
+        "reason": (
+            ai_reason
+            or candidate.get("reason")
+        ),
+        "detail": candidate.get("detail"),
+    }
 
-    university_recommendations = recommend_universities(
+
+def recommend(user: UserProfile):
+    legal_candidates = recommend_laws(user)
+
+    university_candidates = recommend_universities(
         user,
         limit=3,
     )
 
-    ai_recommendation = generate_ai_recommendation(
-        user=user,
-        legal_recommendations=legal_recommendations,
-        university_recommendations=university_recommendations,
+    all_candidates = (
+        legal_candidates
+        + university_candidates
     )
 
-    final_recommendations = []
+    high_candidates = [
+        candidate
+        for candidate in all_candidates
+        if candidate.get("priority") == "HIGH"
+    ]
+
+    optional_candidates = [
+        candidate
+        for candidate in all_candidates
+        if candidate.get("priority") != "HIGH"
+    ]
+
+    optional_limit = max(
+        0,
+        MAX_RECOMMENDATIONS - len(high_candidates),
+    )
+
+    ai_recommendation = generate_ai_recommendation(
+        user=user,
+        required_recommendations=high_candidates,
+        optional_recommendations=optional_candidates,
+        optional_limit=optional_limit,
+    )
+
+    final_recommendations = [
+        make_final_item(candidate)
+        for candidate in high_candidates
+    ]
+
+    included_keys = {
+        candidate_key(candidate)
+        for candidate in high_candidates
+    }
 
     for item in ai_recommendation.get(
         "recommendations",
         [],
     ):
-        recommendation_type = item.get("type")
-        title = item.get("title")
+        if (
+            len(final_recommendations)
+            >= MAX_RECOMMENDATIONS
+        ):
+            break
 
         candidate = find_candidate(
-            recommendation_type=recommendation_type,
-            title=title,
-            legal_recommendations=legal_recommendations,
-            university_recommendations=university_recommendations,
+            recommendation_type=item.get("type"),
+            title=item.get("title"),
+            candidates=optional_candidates,
         )
 
         if candidate is None:
             continue
 
+        key = candidate_key(candidate)
+
+        if key in included_keys:
+            continue
+
         final_recommendations.append(
-            {
-                "type": recommendation_type,
-
-                # AI가 만든 priority를 사용하지 않습니다.
-                # law_service 또는 univ_service가 계산한 값을 사용합니다.
-                "priority": candidate.get(
-                    "priority",
-                    "LOW",
-                ),
-
-                "title": title,
-
-                # 날짜와 상태가 포함된 규칙 기반 reason을 우선 사용합니다.
-                "reason": candidate.get(
-                    "reason",
-                    item.get("reason"),
-                ),
-
-                "detail": candidate.get("detail"),
-            }
+            make_final_item(
+                candidate=candidate,
+                ai_reason=item.get("reason"),
+            )
         )
+
+        included_keys.add(key)
 
     final_recommendations.sort(
         key=lambda item: PRIORITY_ORDER.get(
