@@ -4,10 +4,12 @@ from app.law_service import recommend_laws
 from app.llm_service import (
     select_optional_recommendations,
 )
-from app.message_service import (
-    build_summary,
+from app.message_service import build_summary
+from app.models import (
+    NotificationCategory,
+    RecommendationTrigger,
+    UserProfile,
 )
-from app.models import UserProfile
 from app.univ_service import (
     recommend_universities,
 )
@@ -21,6 +23,11 @@ PRIORITY_ORDER = {
 
 MAX_RECOMMENDATIONS = 5
 
+VALID_NOTIFICATION_CATEGORIES = {
+    category.value
+    for category in NotificationCategory
+}
+
 
 def candidate_key(
     candidate: dict,
@@ -28,6 +35,22 @@ def candidate_key(
     return (
         candidate.get("type"),
         candidate.get("title"),
+    )
+
+
+def has_valid_category(
+    candidate: dict,
+) -> bool:
+    detail = candidate.get("detail")
+
+    if not isinstance(detail, dict):
+        return False
+
+    category = detail.get("category")
+
+    return (
+        category
+        in VALID_NOTIFICATION_CATEGORIES
     )
 
 
@@ -61,21 +84,16 @@ def make_final_item(
             "LOW",
         ),
         "title": candidate.get("title"),
-
-        # 사용자를 향한 중요한 문장은
-        # LLM이 아니라 서비스 코드가 결정합니다.
         "reason": candidate.get("reason"),
-
         "detail": candidate.get("detail"),
     }
 
 
 def recommend(
     user: UserProfile,
+    trigger: RecommendationTrigger | None = None,
 ):
-    legal_candidates = recommend_laws(
-        user
-    )
+    legal_candidates = recommend_laws(user)
 
     university_candidates = (
         recommend_universities(
@@ -84,36 +102,53 @@ def recommend(
         )
     )
 
-    all_candidates = (
+    generated_candidates = (
         legal_candidates
         + university_candidates
+    )
+
+    # category가 없거나 Backend Enum에 없는 후보는
+    # 최종 추천 대상에서 제외합니다.
+    all_candidates = [
+        candidate
+        for candidate in generated_candidates
+        if has_valid_category(candidate)
+    ]
+
+    all_candidates.sort(
+        key=lambda item: PRIORITY_ORDER.get(
+            item.get("priority"),
+            3,
+        )
     )
 
     high_candidates = [
         candidate
         for candidate in all_candidates
-        if candidate.get("priority")
-        == "HIGH"
+        if candidate.get("priority") == "HIGH"
+    ]
+
+    # 최대 5개 계약을 지키면서 HIGH를 우선 포함합니다.
+    high_candidates = high_candidates[
+        :MAX_RECOMMENDATIONS
     ]
 
     optional_candidates = [
         candidate
         for candidate in all_candidates
-        if candidate.get("priority")
-        != "HIGH"
+        if candidate.get("priority") != "HIGH"
     ]
 
     optional_limit = max(
         0,
-        (
-            MAX_RECOMMENDATIONS
-            - len(high_candidates)
-        ),
+        MAX_RECOMMENDATIONS
+        - len(high_candidates),
     )
 
     selected_items = (
         select_optional_recommendations(
             user=user,
+            trigger=trigger,
             required_recommendations=(
                 high_candidates
             ),
@@ -142,14 +177,18 @@ def recommend(
             break
 
         candidate = find_candidate(
-            recommendation_type=(
-                item.get("type")
+            recommendation_type=item.get(
+                "type"
             ),
             title=item.get("title"),
             candidates=optional_candidates,
         )
 
         if candidate is None:
+            continue
+
+        # 선택 이후에도 category를 다시 확인합니다.
+        if not has_valid_category(candidate):
             continue
 
         key = candidate_key(candidate)
@@ -164,11 +203,9 @@ def recommend(
         included_keys.add(key)
 
     final_recommendations.sort(
-        key=lambda item: (
-            PRIORITY_ORDER.get(
-                item.get("priority"),
-                3,
-            )
+        key=lambda item: PRIORITY_ORDER.get(
+            item.get("priority"),
+            3,
         )
     )
 
@@ -179,6 +216,8 @@ def recommend(
             today=date.today(),
         ),
         "recommendations": (
-            final_recommendations
+            final_recommendations[
+                :MAX_RECOMMENDATIONS
+            ]
         ),
     }

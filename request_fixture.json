@@ -1,0 +1,25 @@
+{
+  "user": {
+    "userId": 1,
+    "nationality": "Vietnam",
+    "birthYear": 2003,
+    "userStatus": "UNDERGRADUATE",
+    "schoolName": "성공회대학교",
+    "entryDate": "2026-06-01",
+    "visaType": "D2",
+    "hasAlienRegistration": true,
+    "stayExpirationDate": "2026-12-01",
+    "housingType": "DORMITORY",
+    "isParentSupported": true,
+    "partTimeStatus": "SEARCHING",
+    "partTimeStartDate": null,
+    "hasPartTimePermit": false,
+    "currentTopikLevel": "LEVEL_3",
+    "targetTopikLevel": "LEVEL_4",
+    "language": "KOREAN"
+  },
+  "trigger": {
+    "type": "VISA_EXPIRATION",
+    "daysRemaining": 30
+  }
+}

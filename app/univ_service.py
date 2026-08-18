@@ -117,6 +117,11 @@ def make_result(
         or {}
     )
 
+    detail = {
+        **university,
+        "category": "ADMISSION",
+    }
+
     return {
         "type": "UNIVERSITY",
         "title": university.get(
@@ -165,7 +170,7 @@ def make_result(
                 "evaluation_ratio"
             )
         ),
-        "detail": university,
+        "detail": detail,
     }
 
 

@@ -10,7 +10,10 @@
   "stayExpirationDate": "2026-10-15",
   "housingType": "DORMITORY",
   "isParentSupported": false,
-  "partTimeStatus": "PLANNED",
+  "partTimeStatus": "SEARCHING",
+  "partTimeStartDate": null,
+  "hasPartTimePermit": false,
   "currentTopikLevel": "LEVEL_3",
-  "targetTopikLevel": "LEVEL_4"
+  "targetTopikLevel": "LEVEL_4",
+  "language": "KOREAN"
 }

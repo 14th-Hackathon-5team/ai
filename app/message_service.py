@@ -4,6 +4,7 @@ from app.models import UserProfile
 
 
 PART_TIME_PLANNED_STATUSES = {
+    "SEARCHING",
     "LOOKING",
     "PLANNED",
     "JOB_SEEKING",

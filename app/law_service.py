@@ -20,6 +20,14 @@ LEGAL_MEDIUM_DAYS = 60
 PART_TIME_HIGH_DAYS = 14
 PART_TIME_MEDIUM_DAYS = 60
 
+LAW_CATEGORY_BY_TITLE = {
+    "외국인 등록": "ENTRY",
+    "체류기간 만료/연장": "VISA",
+    "유학생 아르바이트 허가": "PART_TIME",
+    "유학생 비자 종류(D-2)": "VISA",
+    "유학생 비자 종류(D-4)": "VISA",
+}
+
 
 with open(LAW_PATH, "r", encoding="utf-8") as file:
     LAW_DATA = json.load(file)
@@ -38,12 +46,24 @@ def make_result(
     priority: str,
     reason: str,
 ):
+    title = law.get("title")
+
+    category = LAW_CATEGORY_BY_TITLE.get(
+        title,
+        "LEGAL",
+    )
+
+    detail = {
+        **law,
+        "category": category,
+    }
+
     return {
         "type": "LAW",
-        "title": law.get("title"),
+        "title": title,
         "priority": priority,
         "reason": reason,
-        "detail": law,
+        "detail": detail,
     }
 
 
@@ -135,6 +155,7 @@ def recommend_laws(
     )
 
     target_statuses = {
+        "SEARCHING",
         "LOOKING",
         "PLANNED",
         "WORKING",

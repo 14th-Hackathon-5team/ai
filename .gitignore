@@ -1,5 +1,6 @@
 .venv/
 .env
+.uv-cache/
 __pycache__/
 *.pyc
 result.json.env
