@@ -107,8 +107,6 @@ def recommend(
         + university_candidates
     )
 
-    # category가 없거나 Backend Enum에 없는 후보는
-    # 최종 추천 대상에서 제외합니다.
     all_candidates = [
         candidate
         for candidate in generated_candidates
@@ -128,7 +126,6 @@ def recommend(
         if candidate.get("priority") == "HIGH"
     ]
 
-    # 최대 5개 계약을 지키면서 HIGH를 우선 포함합니다.
     high_candidates = high_candidates[
         :MAX_RECOMMENDATIONS
     ]
@@ -187,7 +184,6 @@ def recommend(
         if candidate is None:
             continue
 
-        # 선택 이후에도 category를 다시 확인합니다.
         if not has_valid_category(candidate):
             continue
 
