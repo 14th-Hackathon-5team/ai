@@ -1,3 +1,5 @@
+
+```md
 # KBuddy-AI
 
 외국인 유학생을 위한 맞춤형 법률·대학·뉴스 추천 AI 서비스입니다.
@@ -5,8 +7,6 @@
 ## 프로젝트 배경
 외국인 유학생은 외국인등록, 체류기간 연장, 아르바이트 허가, 대학 입학 일정과 같은 정보를
 개인 상황에 맞게 확인하기 어렵고, 필요한 기한을 놓치는 경우가 있습니다.
-
-KBuddy에서 AI파트는 사용자의 프로필과 체류·학업 상황을 분석해 필요한 법률·대학 정보를 우선순위에 따라 추천하고, 관련 뉴스까지 제공하는 AI 서비스를 제공합니다.
 
 ## 서비스 주소
 
@@ -44,18 +44,30 @@ result.json            추천 결과 예시
 news_result.json       뉴스 결과 예시
 pyproject.toml         프로젝트 의존성 및 Python 설정
 uv.lock                패키지 버전 잠금 파일
-개발 환경
+```
+
+## 개발 환경
+
 - Python 3.14 이상
 - FastAPI
 - Uvicorn
 - Pydantic
 - python-dotenv
 - Groq
-설치 방법
+
+## 설치 방법
+
 프로젝트를 클론한 뒤 의존성을 설치합니다.
+
+```bash
 uv sync
-환경변수 설정
-프로젝트 루트에 .env 파일을 생성하고 아래 값을 설정합니다.
+```
+
+## 환경변수 설정
+
+프로젝트 루트에 `.env` 파일을 생성하고 아래 값을 설정합니다.
+
+```env
 GROQ_API_KEY=Groq_API_Key
 NAVER_CLIENT_ID=Naver_Client_ID
 NAVER_CLIENT_SECRET=Naver_Client_Secret
@@ -63,16 +75,19 @@ NEWS_AI_API_KEY=News_AI_API_Key
 NEWS_AI_MODEL=gpt-5.6-luna
 NAVER_NEWS_PROVIDER=api_hub
 NAVER_NEWS_KEYWORDS=유학생,외국인 유학생,유학생 비자,유학생 체류,유학생 외국인등록,유학생 아르바이트,유학생 취업,유학생 건강보험,유학생 장학금,어학연수생
-환경변수 설명
-변수명	설명
-GROQ_API_KEY	추천 후보 선택에 사용하는 Groq API Key
-NAVER_CLIENT_ID	네이버 뉴스 API 호출용 Client ID
-NAVER_CLIENT_SECRET	네이버 뉴스 API 호출용 Client Secret
-NEWS_AI_API_KEY	뉴스 요약에 사용하는 GPT API Key
-NEWS_AI_MODEL	뉴스 요약에 사용할 GPT 모델명
-NAVER_NEWS_PROVIDER	네이버 뉴스 API 제공 방식
-NAVER_NEWS_KEYWORDS	뉴스 검색에 사용할 키워드 목록
+```
 
+## 환경변수 설명
+
+| 변수명 | 설명 |
+|---|---|
+| `GROQ_API_KEY` | 추천 후보 선택에 사용하는 Groq API Key |
+| `NAVER_CLIENT_ID` | 네이버 뉴스 API 호출용 Client ID |
+| `NAVER_CLIENT_SECRET` | 네이버 뉴스 API 호출용 Client Secret |
+| `NEWS_AI_API_KEY` | 뉴스 요약에 사용하는 GPT API Key |
+| `NEWS_AI_MODEL` | 뉴스 요약에 사용할 GPT 모델명 |
+| `NAVER_NEWS_PROVIDER` | 네이버 뉴스 API 제공 방식 |
+| `NAVER_NEWS_KEYWORDS` | 뉴스 검색에 사용할 키워드 목록 |
 
 ## 서버 실행
 
@@ -260,3 +275,4 @@ news_result.json
 - 백엔드는 `/recommendations`, `/news`를 기준으로 연동합니다.
 - 네이버 API 인증 실패 시 뉴스 결과가 비어 있을 수 있습니다.
 - 뉴스 요약 API 실패 시 기본 요약 로직으로 대체될 수 있습니다.
+```
