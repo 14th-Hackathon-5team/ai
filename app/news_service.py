@@ -1,10 +1,12 @@
 import json
 import os
 import re
+import socket
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from html import unescape
 from html.parser import HTMLParser
+from http.client import IncompleteRead, RemoteDisconnected
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -238,10 +240,6 @@ def has_any_term(text: str, terms: list[str]):
     return any(term in text for term in terms)
 
 
-def has_ellipsis(text: str):
-    return "..." in text or "…" in text
-
-
 def normalize_title(title: str):
     title = clean_naver_text(title)
     title = title.strip("\"'“”‘’ ")
@@ -339,7 +337,16 @@ def search_news(keyword: str, display: int = 20):
         print("NAVER HTTP ERROR:", error.code, error.reason)
         print(error_body)
         return []
-    except (URLError, TimeoutError, json.JSONDecodeError) as error:
+    except (
+        URLError,
+        TimeoutError,
+        RemoteDisconnected,
+        IncompleteRead,
+        ConnectionError,
+        socket.timeout,
+        OSError,
+        json.JSONDecodeError,
+    ) as error:
         print("NAVER ERROR:", error)
         return []
 
@@ -365,13 +372,29 @@ def fetch_article_text(url: str):
         with urlopen(request, timeout=8) as response:
             content_type = response.headers.get_content_charset() or "utf-8"
             html = response.read().decode(content_type, errors="ignore")
-    except (HTTPError, URLError, TimeoutError, UnicodeDecodeError):
+    except (
+        HTTPError,
+        URLError,
+        TimeoutError,
+        UnicodeDecodeError,
+        RemoteDisconnected,
+        IncompleteRead,
+        ConnectionError,
+        socket.timeout,
+        OSError,
+    ) as error:
+        print("ARTICLE FETCH ERROR:", url, error)
         return ""
 
-    parser = TextExtractor()
-    parser.feed(html)
+    try:
+        parser = TextExtractor()
+        parser.feed(html)
+        parser.close()
 
-    return parser.get_text()
+        return parser.get_text()
+    except Exception as error:
+        print("ARTICLE PARSE ERROR:", url, error)
+        return ""
 
 
 def get_searchable_text(raw_item: dict, article_text: str = ""):
@@ -547,24 +570,6 @@ def remove_duplicate_news(items: list[dict]):
         unique_items.append(item)
 
     return unique_items
-
-
-def split_sentences(text: str):
-    text = normalize_text(text)
-
-    if not text:
-        return []
-
-    sentences = re.split(
-        r"(?<=[.!?。])\s+|(?<=다\.)\s*|(?<=습니다\.)\s*",
-        text,
-    )
-
-    return [
-        sentence.strip()
-        for sentence in sentences
-        if sentence.strip()
-    ]
 
 
 def get_news_ai_api_key():
@@ -762,7 +767,18 @@ def summarize_article_with_ai(title: str, description: str, article_text: str):
         print("NEWS AI HTTP ERROR:", error.code, error.reason)
         print(error_body)
         return None
-    except (URLError, TimeoutError, json.JSONDecodeError, ValueError) as error:
+    except (
+        URLError,
+        TimeoutError,
+        UnicodeDecodeError,
+        RemoteDisconnected,
+        IncompleteRead,
+        ConnectionError,
+        socket.timeout,
+        OSError,
+        json.JSONDecodeError,
+        ValueError,
+    ) as error:
         print("NEWS AI ERROR:", error)
         return None
 
@@ -784,7 +800,11 @@ def prepare_news_candidate(raw_item: dict):
     if not link:
         return None
 
-    article_text = fetch_article_text(link)
+    try:
+        article_text = fetch_article_text(link)
+    except Exception as error:
+        print("ARTICLE PREPARE ERROR:", link, error)
+        return None
 
     if not is_article_text_valid(article_text):
         return None
@@ -803,11 +823,15 @@ def prepare_news_candidate(raw_item: dict):
 
 
 def build_news_item(candidate: dict):
-    summary = summarize_article_with_ai(
-        title=candidate["title"],
-        description=candidate["description"],
-        article_text=candidate["articleText"],
-    )
+    try:
+        summary = summarize_article_with_ai(
+            title=candidate["title"],
+            description=candidate["description"],
+            article_text=candidate["articleText"],
+        )
+    except Exception as error:
+        print("NEWS SUMMARY ERROR:", candidate.get("link", ""), error)
+        return None
 
     if not summary:
         return None
@@ -833,7 +857,11 @@ def collect_foreigner_news(total_limit: int = 4, display_per_keyword: int = 20):
 
             seen_links.add(link)
 
-            candidate = prepare_news_candidate(raw_item)
+            try:
+                candidate = prepare_news_candidate(raw_item)
+            except Exception as error:
+                print("NEWS CANDIDATE ERROR:", link, error)
+                continue
 
             if candidate:
                 candidates.append(candidate)
