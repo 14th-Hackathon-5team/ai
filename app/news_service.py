@@ -26,6 +26,7 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 NEWS_RESULT_PATH = BASE_DIR / "news_result.json"
+NEWS_RESULT_EN_PATH = BASE_DIR / "news_result_en.json"
 
 NAVER_API_HUB_NEWS_URL = "https://naverapihub.apigw.ntruss.com/search/v1/news"
 NAVER_DEVELOPERS_NEWS_URL = "https://openapi.naver.com/v1/search/news.json"
@@ -298,6 +299,30 @@ def trim_text(text: str, max_length: int):
         return text
 
     return text[:max_length].rstrip() + "..."
+
+
+def normalize_news_language(language: str | None):
+    value = (language or "ko").strip().lower()
+
+    if value in {
+        "en",
+        "eng",
+        "english",
+        "us",
+        "en-us",
+        "en_us",
+        "영어",
+    }:
+        return "en"
+
+    return "ko"
+
+
+def get_news_result_path(language: str | None = "ko"):
+    if normalize_news_language(language) == "en":
+        return NEWS_RESULT_EN_PATH
+
+    return NEWS_RESULT_PATH
 
 
 def has_any_term(text: str, terms: list[str]):
@@ -693,8 +718,43 @@ def get_news_ai_model():
     return os.getenv("NEWS_AI_MODEL", "gpt-5.6-luna").strip()
 
 
-def build_news_summary_prompt(title: str, description: str, article_text: str):
+def build_news_summary_prompt(
+    title: str,
+    description: str,
+    article_text: str,
+    language: str | None = "ko",
+):
     article_text = trim_text(article_text, 6000)
+    language = normalize_news_language(language)
+
+    if language == "en":
+        return f"""
+Summarize the following news article for international students in Korea.
+
+Writing rules:
+- Write everything in natural English.
+- Return exactly one JSON object.
+- Write title as a natural headline that represents the article.
+- If the original title is truncated, complete it using the article and Naver description.
+- title must be 70 characters or shorter.
+- threeLineSummary must be exactly an array of 3 strings.
+- Each threeLineSummary sentence must be short and easy to read.
+- detailedSummary must be 3 to 5 sentences.
+- Focus only on information international students actually need, such as visa, stay period, alien registration, legal or administrative procedures, admission, TOPIK, Korean language education, part-time work, employment, scholarships, health insurance, medical care, housing, and daily life support.
+- Do not guess anything that is not in the article.
+- If the article does not provide a specific detail, write "The article does not provide specific details."
+- Do not emphasize crime, finance, or advertisement-like content.
+- Include institution names, dates, eligible applicants, program names, and application methods in detailedSummary if they are available.
+
+News title:
+{title}
+
+Naver description:
+{description}
+
+Article body:
+{article_text}
+""".strip()
 
     return f"""
 아래 뉴스 자료를 외국인 유학생에게 도움이 되는 정보 중심으로 정리해줘.
@@ -797,6 +857,7 @@ def summarize_article_with_ai(
     description: str,
     article_text: str,
     deadline: float | None = None,
+    language: str | None = "ko",
 ):
     api_key = get_news_ai_api_key()
 
@@ -812,8 +873,9 @@ def summarize_article_with_ai(
                     {
                         "type": "input_text",
                         "text": (
-                            "너는 외국인 유학생을 위한 뉴스 요약 도우미다. "
-                            "기사에 없는 내용은 추측하지 않고, 존댓말로만 요약한다."
+                            "You summarize news for international students in Korea. "
+                            "Follow the requested output language exactly. "
+                            "Never guess details that are not in the article."
                         ),
                     }
                 ],
@@ -827,6 +889,7 @@ def summarize_article_with_ai(
                             title=title,
                             description=description,
                             article_text=article_text,
+                            language=language,
                         ),
                     }
                 ],
@@ -949,12 +1012,14 @@ def prepare_news_candidate(
 def build_news_item(
     candidate: dict,
     deadline: float | None = None,
+    language: str | None = "ko",
 ):
     summary = summarize_article_with_ai(
         title=candidate["title"],
         description=candidate["description"],
         article_text=candidate["articleText"],
         deadline=deadline,
+        language=language,
     )
 
     if not summary:
@@ -1089,6 +1154,7 @@ def build_news_items_parallel(
     candidates: list[dict],
     total_limit: int,
     deadline: float | None = None,
+    language: str | None = "ko",
 ):
     if not candidates:
         return [], 0, False
@@ -1104,6 +1170,7 @@ def build_news_items_parallel(
             build_news_item,
             candidate,
             deadline,
+            language,
         ): index
         for index, candidate in enumerate(summary_candidates)
     }
@@ -1160,6 +1227,7 @@ def build_news_items_parallel(
 def collect_foreigner_news(
     total_limit: int = NEWS_TOTAL_LIMIT,
     display_per_keyword: int = NEWS_DISPLAY_PER_KEYWORD,
+    language: str | None = "ko",
 ):
     deadline = make_deadline()
 
@@ -1196,6 +1264,7 @@ def collect_foreigner_news(
         candidates=unique_candidates,
         total_limit=total_limit,
         deadline=deadline,
+        language=language,
     )
 
     if not news_items and unique_candidates:
@@ -1260,6 +1329,15 @@ def read_cached_news_result(path: Path = NEWS_RESULT_PATH):
     return data
 
 
+def has_cached_news_items(result: dict | None):
+    if not isinstance(result, dict):
+        return False
+
+    news = result.get("news")
+
+    return isinstance(news, list) and len(news) > 0
+
+
 def save_news_result(
     result: dict,
     path: Path = NEWS_RESULT_PATH,
@@ -1274,9 +1352,264 @@ def save_news_result(
     temp_path.replace(path)
 
 
-def refresh_news_result(path: Path = NEWS_RESULT_PATH):
+def validate_translated_news_item(
+    summary: dict,
+    source_item: dict,
+):
+    title = normalize_title(str(summary.get("title", "")))
+    lines = summary.get("threeLineSummary", [])
+    detailed_summary = normalize_text(str(summary.get("detailedSummary", "")))
+
+    if not title:
+        return None
+
+    if not isinstance(lines, list) or len(lines) != 3:
+        return None
+
+    clean_lines = [
+        trim_text(str(line), 140)
+        for line in lines
+        if normalize_text(str(line))
+    ]
+
+    if len(clean_lines) != 3:
+        return None
+
+    if not detailed_summary:
+        return None
+
+    return {
+        "title": trim_text(title, 90),
+        "threeLineSummary": clean_lines,
+        "detailedSummary": trim_text(detailed_summary, 1200),
+        "link": source_item.get("link", ""),
+    }
+
+
+def build_news_translation_prompt(item: dict):
+    source = {
+        "title": item.get("title", ""),
+        "threeLineSummary": item.get("threeLineSummary", []),
+        "detailedSummary": item.get("detailedSummary", ""),
+    }
+
+    return f"""
+Translate this Korean news summary into natural English for international students in Korea.
+
+Rules:
+- Return exactly one JSON object.
+- Translate only title, threeLineSummary, and detailedSummary.
+- Keep threeLineSummary as exactly 3 strings.
+- Do not add facts that are not present in the Korean source.
+- Preserve names, dates, institution names, TOPIK, D-2, D-4, HiKorea, and legal article references when needed.
+- Write clear English that is easy for international students to understand.
+
+Korean news summary:
+{json.dumps(source, ensure_ascii=False, indent=2)}
+""".strip()
+
+
+def translate_news_item_to_english(
+    item: dict,
+    deadline: float | None = None,
+):
+    api_key = get_news_ai_api_key()
+
+    if not api_key:
+        raise NewsServiceUnavailableError("NEWS_AI_API_KEY가 없습니다.")
+
+    payload = {
+        "model": get_news_ai_model(),
+        "input": [
+            {
+                "role": "system",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": (
+                            "You translate Korean news summaries into English. "
+                            "Preserve the JSON schema exactly and do not add facts."
+                        ),
+                    }
+                ],
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": build_news_translation_prompt(item),
+                    }
+                ],
+            },
+        ],
+        "text": {
+            "format": {
+                "type": "json_schema",
+                "name": "translated_news_summary",
+                "strict": True,
+                "schema": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "title": {
+                            "type": "string"
+                        },
+                        "threeLineSummary": {
+                            "type": "array",
+                            "minItems": 3,
+                            "maxItems": 3,
+                            "items": {
+                                "type": "string"
+                            },
+                        },
+                        "detailedSummary": {
+                            "type": "string"
+                        },
+                    },
+                    "required": [
+                        "title",
+                        "threeLineSummary",
+                        "detailedSummary",
+                    ],
+                },
+            }
+        },
+        "max_output_tokens": 900,
+    }
+
+    request = Request(
+        OPENAI_RESPONSES_API_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        timeout = remaining_timeout(deadline, NEWS_AI_TIMEOUT_SECONDS)
+
+        with urlopen(request, timeout=timeout) as response:
+            response_data = json.loads(response.read().decode("utf-8"))
+
+    except NewsCollectionTimeout:
+        raise
+    except HTTPError as error:
+        error_body = error.read().decode("utf-8", errors="ignore")
+        print("NEWS TRANSLATION HTTP ERROR:", error.code, error.reason)
+        print(error_body)
+        return None
+    except (
+        URLError,
+        TimeoutError,
+        RemoteDisconnected,
+        IncompleteRead,
+        ConnectionError,
+        socket.timeout,
+        OSError,
+        json.JSONDecodeError,
+        ValueError,
+    ) as error:
+        print("NEWS TRANSLATION ERROR:", error)
+        return None
+
+    try:
+        response_text = extract_openai_response_text(response_data)
+        summary = parse_json_object(response_text)
+
+        return validate_translated_news_item(summary, item)
+    except (json.JSONDecodeError, ValueError, TypeError) as error:
+        print("NEWS TRANSLATION PARSE ERROR:", error)
+        return None
+
+
+def translate_news_result_to_english(
+    result: dict,
+    cache_path: Path | None = NEWS_RESULT_EN_PATH,
+):
+    news = result.get("news", [])
+
+    if not isinstance(news, list):
+        return {"news": []}
+
+    if not news:
+        return {"news": []}
+
+    deadline = make_deadline()
+    translated_items = []
+
+    for item in news:
+        ensure_time_left(deadline)
+
+        translated_item = translate_news_item_to_english(
+            item,
+            deadline=deadline,
+        )
+
+        if translated_item:
+            translated_items.append(translated_item)
+
+    if not translated_items:
+        raise NewsServiceUnavailableError("뉴스 영어 번역에 실패했습니다.")
+
+    translated_result = {
+        "news": translated_items,
+    }
+
+    if cache_path is not None:
+        save_news_result(translated_result, path=cache_path)
+
+    return translated_result
+
+
+def get_korean_news_result_for_translation(
+    force_refresh: bool = False,
+):
+    if not force_refresh:
+        cached_result = read_cached_news_result(NEWS_RESULT_PATH)
+
+        if cached_result is not None and cached_result.get("news"):
+            return cached_result
+
+    try:
+        return refresh_news_result(
+            path=NEWS_RESULT_PATH,
+            language="ko",
+        )
+    except (
+        NewsCollectionTimeout,
+        NewsServiceUnavailableError,
+    ):
+        cached_result = read_cached_news_result(NEWS_RESULT_PATH)
+
+        if cached_result is not None:
+            return cached_result
+
+        raise
+
+def refresh_news_result(
+    path: Path | None = None,
+    language: str | None = "ko",
+):
+    language = normalize_news_language(language)
+
+    if language == "en":
+        korean_result = get_korean_news_result_for_translation(
+            force_refresh=True,
+        )
+
+        return translate_news_result_to_english(
+            korean_result,
+            cache_path=NEWS_RESULT_EN_PATH,
+        )
+
+    if path is None:
+        path = NEWS_RESULT_PATH
+
     result = {
-        "news": collect_foreigner_news(),
+        "news": collect_foreigner_news(language="ko"),
     }
 
     save_news_result(result, path=path)
@@ -1294,9 +1627,52 @@ def raise_news_service_unavailable(error: Exception):
 
 
 def write_news_result(
-    path: Path = NEWS_RESULT_PATH,
+    path: Path | None = None,
     force_refresh: bool = False,
+    language: str | None = "ko",
 ):
+    language = normalize_news_language(language)
+
+    if language == "en":
+        if path is None:
+            path = NEWS_RESULT_EN_PATH
+
+        if not force_refresh:
+            cached_result = read_cached_news_result(path)
+
+            if has_cached_news_items(cached_result):
+                return cached_result
+
+        try:
+            korean_result = get_korean_news_result_for_translation(
+                force_refresh=force_refresh,
+            )
+
+            return translate_news_result_to_english(
+                korean_result,
+                cache_path=path,
+            )
+        except (
+            NewsCollectionTimeout,
+            NewsServiceUnavailableError,
+        ) as error:
+            cached_result = read_cached_news_result(path)
+
+            if has_cached_news_items(cached_result):
+                return cached_result
+
+            raise_news_service_unavailable(error)
+        except Exception as error:
+            cached_result = read_cached_news_result(path)
+
+            if has_cached_news_items(cached_result):
+                return cached_result
+
+            raise_news_service_unavailable(error)
+
+    if path is None:
+        path = NEWS_RESULT_PATH
+
     if not force_refresh:
         cached_result = read_cached_news_result(path)
 
@@ -1304,7 +1680,19 @@ def write_news_result(
             return cached_result
 
     try:
-        return refresh_news_result(path=path)
+        result = refresh_news_result(
+            path=path,
+            language="ko",
+        )
+
+        # Korean news changed, so the English cache should be regenerated next time.
+        try:
+            if NEWS_RESULT_EN_PATH.exists():
+                NEWS_RESULT_EN_PATH.unlink()
+        except OSError as error:
+            print("NEWS EN CACHE DELETE ERROR:", error)
+
+        return result
     except (
         NewsCollectionTimeout,
         NewsServiceUnavailableError,

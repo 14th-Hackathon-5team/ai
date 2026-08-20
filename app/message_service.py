@@ -17,12 +17,43 @@ PART_TIME_WORKING_STATUSES = {
 }
 
 
+def normalize_language(language: str | None) -> str:
+    value = (language or "ko").strip().lower()
+
+    if value in {
+        "en",
+        "eng",
+        "english",
+        "us",
+        "en-us",
+        "en_us",
+        "영어",
+    }:
+        return "en"
+
+    return "ko"
+
+
+def is_english_language(language: str | None) -> bool:
+    return normalize_language(language) == "en"
+
+
 def format_korean_date(value: date) -> str:
     return (
         f"{value.year}년 "
         f"{value.month}월 "
         f"{value.day}일"
     )
+
+
+def format_date(
+    value: date,
+    language: str | None = "ko",
+) -> str:
+    if is_english_language(language):
+        return f"{value.strftime('%B')} {value.day}, {value.year}"
+
+    return format_korean_date(value)
 
 
 def normalize_visa(visa_type: str) -> str:
@@ -50,7 +81,29 @@ def format_visa(visa_type: str) -> str:
 
 def build_registration_reason(
     days_left: int,
+    language: str | None = "ko",
 ) -> str:
+    if is_english_language(language):
+        if days_left < 0:
+            return (
+                "The alien registration deadline passed "
+                f"{-days_left} days ago. Please check your "
+                "registration status and required steps as soon as possible."
+            )
+
+        if days_left == 0:
+            return (
+                "The alien registration deadline is today. "
+                "Please check immediately whether you can complete "
+                "registration within the deadline."
+            )
+
+        return (
+            "Alien registration has not been completed yet. "
+            f"About {days_left} days remain until the deadline, "
+            "so please prepare the application within the required period."
+        )
+
     if days_left < 0:
         return (
             "외국인등록 기한이 "
@@ -74,7 +127,29 @@ def build_registration_reason(
 
 def build_stay_extension_reason(
     days_left: int,
+    language: str | None = "ko",
 ) -> str:
+    if is_english_language(language):
+        if days_left < 0:
+            return (
+                "The stay expiration date saved in your profile "
+                f"passed {-days_left} days ago. Please check your "
+                "current stay status and required procedures immediately."
+            )
+
+        if days_left == 0:
+            return (
+                "Your authorized stay expires today. If you plan to "
+                "continue staying in Korea, please check extension "
+                "eligibility immediately."
+            )
+
+        return (
+            f"There are {days_left} days left until your authorized stay expires. "
+            "If you plan to continue staying in Korea, please check the "
+            "required procedures and documents for extension."
+        )
+
     if days_left < 0:
         return (
             "프로필에 등록된 체류기간 만료일이 "
@@ -102,6 +177,7 @@ def build_part_time_reason(
     status: str | None,
     has_permit: bool | None,
     days_left: int | None,
+    language: str | None = "ko",
 ) -> str:
     visa = format_visa(visa_type)
 
@@ -110,6 +186,46 @@ def build_part_time_reason(
         if status
         else ""
     )
+
+    if is_english_language(language):
+        if normalized_status in PART_TIME_WORKING_STATUSES:
+            if has_permit is False:
+                return (
+                    f"Your current status is {visa}, and your profile shows "
+                    "that you are working part-time without a completed permit. "
+                    "Please check whether you are allowed to work immediately."
+                )
+
+            return (
+                f"Your current status is {visa}, and your profile shows "
+                "that you are working part-time, but the permit status is not confirmed. "
+                "Please check the required permit status."
+            )
+
+        if days_left is not None:
+            if days_left < 0:
+                return (
+                    f"Your current status is {visa}, and the part-time work start date "
+                    f"saved in your profile passed {-days_left} days ago. "
+                    "Please check whether the required permit was completed before working."
+                )
+
+            if days_left == 0:
+                return (
+                    f"Your current status is {visa}, and your planned part-time work "
+                    "start date is today. Please check the required permit before starting work."
+                )
+
+            return (
+                f"Your current status is {visa}, and you are planning part-time work. "
+                f"There are {days_left} days left until the planned start date, "
+                "so please check the required permit before working."
+            )
+
+        return (
+            f"Your current status is {visa}, and you are planning part-time work. "
+            "No start date is registered, so please prepare the required permit before working."
+        )
 
     if normalized_status in PART_TIME_WORKING_STATUSES:
         if has_permit is False:
@@ -165,8 +281,61 @@ def build_university_reason(
     start: date,
     end: date,
     today: date,
+    language: str | None = "ko",
 ) -> str:
     messages = []
+
+    if is_english_language(language):
+        if required_topik is not None:
+            messages.append(
+                f"Your profile shows TOPIK level {current_topik}, "
+                f"which meets this university's TOPIK level {required_topik} "
+                "or higher language requirement."
+            )
+        else:
+            messages.append(
+                "This university can be checked based on your profile information "
+                "and the university application schedule."
+            )
+
+        if start <= today <= end:
+            days_until_deadline = (
+                end - today
+            ).days
+
+            if days_until_deadline == 0:
+                messages.append(
+                    "The application deadline is today, so please check your "
+                    "application decision and submission status immediately."
+                )
+            else:
+                messages.append(
+                    "The application period is currently open, and "
+                    f"{days_until_deadline} days remain until the deadline. "
+                    "Please check the required documents and submission schedule."
+                )
+
+        else:
+            days_until_start = (
+                start - today
+            ).days
+            formatted_start = format_date(
+                start,
+                language,
+            )
+
+            if days_until_start > 21:
+                messages.append(
+                    f"There are {days_until_start} days left until applications open, "
+                    "so you can review it in advance."
+                )
+            else:
+                messages.append(
+                    f"Applications open in {days_until_start} days on {formatted_start}. "
+                    "Please check the required documents in advance."
+                )
+
+        return " ".join(messages)
 
     if required_topik is not None:
         messages.append(
@@ -228,8 +397,89 @@ def build_summary(
 ) -> str:
     messages = []
 
+    language = getattr(user, "language", "ko")
+    is_english = is_english_language(language)
     visa = format_visa(user.visaType)
     user_status = user.userStatus.upper()
+
+    if is_english:
+        if user_status == "BEFORE_ENTRY":
+            messages.append(
+                f"You are preparing to enter Korea with {visa} status."
+            )
+        else:
+            messages.append(
+                f"You are currently studying in Korea with {visa} status."
+            )
+
+        if (
+            user_status != "BEFORE_ENTRY"
+            and not user.hasAlienRegistration
+        ):
+            days_since_entry = (
+                today - user.entryDate
+            ).days
+            days_left = 90 - days_since_entry
+
+            if days_left >= 0:
+                messages.append(
+                    "Alien registration has not been completed yet, and "
+                    f"about {days_left} days remain until the registration deadline."
+                )
+            else:
+                messages.append(
+                    "Based on your profile, the alien registration deadline "
+                    f"passed {-days_left} days ago."
+                )
+
+        if user.stayExpirationDate:
+            expiration = format_date(
+                user.stayExpirationDate,
+                language,
+            )
+
+            messages.append(
+                f"The stay period saved in your profile is valid until {expiration}."
+            )
+
+        part_time_status = (
+            user.partTimeStatus.upper()
+            if user.partTimeStatus
+            else ""
+        )
+
+        if part_time_status in PART_TIME_PLANNED_STATUSES:
+            if user.hasPartTimePermit is not True:
+                messages.append(
+                    "You are planning part-time work, so you need to check "
+                    "the required permit before working."
+                )
+
+        elif part_time_status in PART_TIME_WORKING_STATUSES:
+            if user.hasPartTimePermit is False:
+                messages.append(
+                    "You are currently working part-time, and your profile shows "
+                    "that the permit has not been completed, so immediate checking is required."
+                )
+
+            elif user.hasPartTimePermit is None:
+                messages.append(
+                    "You are currently working part-time, but permit completion is not registered, "
+                    "so confirmation is required."
+                )
+
+        topik_level = "".join(
+            character
+            for character in user.currentTopikLevel
+            if character.isdigit()
+        )
+
+        if topik_level:
+            messages.append(
+                f"Your current TOPIK level is registered as level {topik_level}."
+            )
+
+        return " ".join(messages)
 
     if user_status == "BEFORE_ENTRY":
         messages.append(
@@ -311,3 +561,4 @@ def build_summary(
         )
 
     return " ".join(messages)
+

@@ -6,6 +6,7 @@ from fastapi import (
     FastAPI,
     Header,
     HTTPException,
+    Query,
     status,
 )
 from fastapi.middleware.cors import CORSMiddleware
@@ -88,8 +89,14 @@ def create_recommendations(user: UserProfile):
 
 
 @app.get("/news")
-def get_news():
-    return write_news_result()
+def get_news(
+    refresh: bool = Query(default=False),
+    language: str = Query(default="ko"),
+):
+    return write_news_result(
+        force_refresh=refresh,
+        language=language,
+    )
 
 
 def run_from_file():
@@ -110,7 +117,10 @@ def run_from_file():
 
     print("result.json 생성 완료")
 
-    write_news_result()
+    write_news_result(
+        force_refresh=True,
+        language=getattr(user, "language", "ko"),
+    )
 
     print("news_result.json 생성 완료")
 

@@ -26,6 +26,26 @@ def get_groq_client() -> Groq:
     return Groq(api_key=api_key)
 
 
+def parse_json_object(content: str):
+    text = (content or "").strip()
+
+    if text.startswith("```"):
+        text = text.strip("`").strip()
+
+        if text.startswith("json"):
+            text = text[4:].strip()
+
+    start = text.find("{")
+    end = text.rfind("}")
+
+    if start == -1 or end == -1 or end < start:
+        raise ValueError(
+            "JSON 객체를 찾을 수 없습니다."
+        )
+
+    return json.loads(text[start:end + 1])
+
+
 def select_optional_recommendations(
     user: UserProfile,
     trigger: RecommendationTrigger | None,
@@ -39,7 +59,11 @@ def select_optional_recommendations(
     ):
         return []
 
-    client = get_groq_client()
+    try:
+        client = get_groq_client()
+    except Exception as error:
+        print("OPTIONAL RECOMMENDATION CLIENT ERROR:", error)
+        return []
 
     user_data = user.model_dump(
         mode="json"
@@ -111,56 +135,62 @@ HIGH 추천은 애플리케이션이 자동으로 포함하므로
 title과 type은 후보의 값을 그대로 사용하세요.
 priority, reason, category를 새로 작성하거나 변경하지 마세요.
 
-응답은 반드시 다음 JSON 형식으로만 반환하세요.
+응답은 JSON 객체 하나만 반환하세요.
+설명 문장이나 마크다운은 쓰지 마세요.
 
+반환 형식:
 {{
   "recommendations": [
     {{
-      "type": "LAW 또는 UNIVERSITY",
+      "type": "LAW",
       "title": "후보에 존재하는 실제 title"
     }}
   ]
 }}
 """
 
-    response = client.chat.completions.create(
-        model="openai/gpt-oss-20b",
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "Select only from the provided "
-                    "optional recommendation candidates. "
-                    "Use the backend trigger as context. "
-                    "Never invent or modify titles, "
-                    "priorities, reasons, or categories. "
-                    "Respond with JSON only."
-                ),
-            },
-            {
-                "role": "user",
-                "content": prompt,
-            },
-        ],
-        temperature=0.1,
-        response_format={
-            "type": "json_object",
-        },
-    )
-
-    content = (
-        response.choices[0]
-        .message.content
-    )
-
-    if not content:
-        raise ValueError(
-            "Groq API 응답 내용이 비어 있습니다."
+    try:
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-20b",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "Select only from the provided "
+                        "optional recommendation candidates. "
+                        "Use the backend trigger as context. "
+                        "Never invent or modify titles, "
+                        "priorities, reasons, or categories. "
+                        "Respond with JSON only."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": prompt,
+                },
+            ],
+            temperature=0.1,
         )
 
-    parsed = json.loads(content)
+        content = (
+            response.choices[0]
+            .message.content
+        )
 
-    return parsed.get(
-        "recommendations",
-        [],
-    )
+        if not content:
+            return []
+
+        parsed = parse_json_object(content)
+        recommendations = parsed.get(
+            "recommendations",
+            [],
+        )
+
+        if not isinstance(recommendations, list):
+            return []
+
+        return recommendations
+
+    except Exception as error:
+        print("OPTIONAL RECOMMENDATION ERROR:", error)
+        return []
