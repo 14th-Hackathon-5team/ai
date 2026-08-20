@@ -269,6 +269,7 @@ news_result.json
 
 ## 주의사항
 
+```txt
 - `.env` 파일은 Git에 커밋하지 않습니다.
 - API Key를 코드나 JSON 파일에 직접 작성하지 않습니다.
 - FastAPI 공식 실행 기준은 `app.main`입니다.
