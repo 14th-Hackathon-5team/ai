@@ -1,11 +1,26 @@
 import json
+import os
 
-from fastapi import FastAPI
+from dotenv import load_dotenv
+from fastapi import (
+    FastAPI,
+    Header,
+    HTTPException,
+    status,
+)
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.models import UserProfile
+from app.models import (
+    RecommendationRequest,
+    UserProfile,
+)
 from app.news_service import write_news_result
 from app.recommender import recommend
+
+
+load_dotenv()
+
+INTERNAL_API_KEY = os.getenv("INTERNAL_API_KEY")
 
 
 app = FastAPI(
@@ -20,6 +35,7 @@ app.add_middleware(
         "http://localhost:5173",
         "http://127.0.0.1:3000",
         "http://127.0.0.1:5173",
+        "https://frontend-chi-pied-78.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -27,9 +43,43 @@ app.add_middleware(
 )
 
 
+def verify_internal_api_key(
+    x_internal_api_key: str | None,
+):
+    if not INTERNAL_API_KEY:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_500_INTERNAL_SERVER_ERROR
+            ),
+            detail="INTERNAL_API_KEY is not configured",
+        )
+
+    if x_internal_api_key != INTERNAL_API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid internal API key",
+        )
+
+
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+
+@app.post("/recommend")
+def create_recommendation(
+    request: RecommendationRequest,
+    x_internal_api_key: str | None = Header(
+        default=None,
+        alias="X-Internal-API-Key",
+    ),
+):
+    verify_internal_api_key(x_internal_api_key)
+
+    return recommend(
+        user=request.user,
+        trigger=request.trigger,
+    )
 
 
 @app.post("/recommendations")
@@ -43,17 +93,17 @@ def get_news():
 
 
 def run_from_file():
-    with open("user.json", "r", encoding="utf-8") as f:
-        user_data = json.load(f)
+    with open("user.json", "r", encoding="utf-8") as file:
+        user_data = json.load(file)
 
     user = UserProfile(**user_data)
 
     result = recommend(user)
 
-    with open("result.json", "w", encoding="utf-8") as f:
+    with open("result.json", "w", encoding="utf-8") as file:
         json.dump(
             result,
-            f,
+            file,
             ensure_ascii=False,
             indent=2,
         )
