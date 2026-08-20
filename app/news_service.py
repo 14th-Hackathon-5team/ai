@@ -2,6 +2,12 @@ import json
 import os
 import re
 import socket
+import time
+from concurrent.futures import (
+    ThreadPoolExecutor,
+    TimeoutError as FuturesTimeoutError,
+    as_completed,
+)
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from html import unescape
@@ -13,6 +19,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from dotenv import load_dotenv
+from fastapi import HTTPException, status
 
 
 load_dotenv()
@@ -23,6 +30,8 @@ NEWS_RESULT_PATH = BASE_DIR / "news_result.json"
 NAVER_API_HUB_NEWS_URL = "https://naverapihub.apigw.ntruss.com/search/v1/news"
 NAVER_DEVELOPERS_NEWS_URL = "https://openapi.naver.com/v1/search/news.json"
 OPENAI_RESPONSES_API_URL = "https://api.openai.com/v1/responses"
+
+NEWS_SERVICE_UNAVAILABLE_DETAIL = "NEWS_SERVICE_UNAVAILABLE"
 
 DEFAULT_KEYWORDS = [
     "유학생 비자",
@@ -190,6 +199,61 @@ DUPLICATE_STOPWORDS = {
 MIN_ARTICLE_TEXT_LENGTH = 180
 
 
+class NewsCollectionTimeout(Exception):
+    pass
+
+
+class NewsServiceUnavailableError(Exception):
+    pass
+
+
+class ArticleFetchFailed(Exception):
+    pass
+
+
+def get_int_env(name: str, default: int, minimum: int = 1):
+    raw_value = os.getenv(name)
+
+    if not raw_value:
+        return default
+
+    try:
+        value = int(raw_value)
+    except ValueError:
+        return default
+
+    return max(value, minimum)
+
+
+def get_float_env(name: str, default: float, minimum: float = 0.1):
+    raw_value = os.getenv(name)
+
+    if not raw_value:
+        return default
+
+    try:
+        value = float(raw_value)
+    except ValueError:
+        return default
+
+    return max(value, minimum)
+
+
+NEWS_TOTAL_LIMIT = get_int_env("NEWS_TOTAL_LIMIT", 4)
+NEWS_DISPLAY_PER_KEYWORD = get_int_env("NEWS_DISPLAY_PER_KEYWORD", 6)
+NEWS_MAX_KEYWORDS_PER_REQUEST = get_int_env("NEWS_MAX_KEYWORDS_PER_REQUEST", 4)
+NEWS_MAX_RAW_ITEMS = get_int_env("NEWS_MAX_RAW_ITEMS", 24)
+ARTICLE_FETCH_WORKERS = get_int_env("NEWS_ARTICLE_FETCH_WORKERS", 4)
+SUMMARY_WORKERS = get_int_env("NEWS_SUMMARY_WORKERS", 2)
+
+NEWS_TOTAL_TIMEOUT_SECONDS = get_float_env("NEWS_TOTAL_TIMEOUT_SECONDS", 18.0)
+NAVER_SEARCH_TIMEOUT_SECONDS = get_float_env("NEWS_NAVER_TIMEOUT_SECONDS", 4.0)
+ARTICLE_FETCH_TIMEOUT_SECONDS = get_float_env("NEWS_ARTICLE_TIMEOUT_SECONDS", 3.0)
+NEWS_AI_TIMEOUT_SECONDS = get_float_env("NEWS_AI_TIMEOUT_SECONDS", 8.0)
+
+MIN_TIME_REMAINING_SECONDS = 0.2
+
+
 class TextExtractor(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -245,6 +309,36 @@ def normalize_title(title: str):
     title = title.strip("\"'“”‘’ ")
 
     return title
+
+
+def make_deadline():
+    return time.monotonic() + NEWS_TOTAL_TIMEOUT_SECONDS
+
+
+def get_remaining_seconds(deadline: float | None):
+    if deadline is None:
+        return None
+
+    return deadline - time.monotonic()
+
+
+def ensure_time_left(deadline: float | None):
+    remaining = get_remaining_seconds(deadline)
+
+    if remaining is not None and remaining <= MIN_TIME_REMAINING_SECONDS:
+        raise NewsCollectionTimeout("뉴스 처리 제한 시간을 초과했습니다.")
+
+
+def remaining_timeout(deadline: float | None, default_timeout: float):
+    if deadline is None:
+        return default_timeout
+
+    remaining = deadline - time.monotonic() - MIN_TIME_REMAINING_SECONDS
+
+    if remaining <= 0:
+        raise NewsCollectionTimeout("뉴스 처리 제한 시간을 초과했습니다.")
+
+    return max(0.1, min(default_timeout, remaining))
 
 
 def get_keywords():
@@ -303,19 +397,24 @@ def get_naver_news_url():
     return NAVER_API_HUB_NEWS_URL
 
 
-def request_json(url: str):
+def request_json(url: str, deadline: float | None = None):
     headers = get_naver_auth_headers()
 
     if not all(headers.values()):
-        raise RuntimeError("NAVER API 인증 키가 없습니다.")
+        raise NewsServiceUnavailableError("NAVER API 인증 키가 없습니다.")
 
     request = Request(url, headers=headers)
+    timeout = remaining_timeout(deadline, NAVER_SEARCH_TIMEOUT_SECONDS)
 
-    with urlopen(request, timeout=10) as response:
+    with urlopen(request, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
-def search_news(keyword: str, display: int = 20):
+def search_news(
+    keyword: str,
+    display: int = NEWS_DISPLAY_PER_KEYWORD,
+    deadline: float | None = None,
+):
     provider = get_naver_provider()
 
     params = {
@@ -331,12 +430,14 @@ def search_news(keyword: str, display: int = 20):
     url = f"{get_naver_news_url()}?{urlencode(params)}"
 
     try:
-        data = request_json(url)
+        data = request_json(url, deadline=deadline)
+    except NewsCollectionTimeout:
+        raise
     except HTTPError as error:
         error_body = error.read().decode("utf-8", errors="ignore")
         print("NAVER HTTP ERROR:", error.code, error.reason)
         print(error_body)
-        return []
+        raise NewsServiceUnavailableError("NAVER 뉴스 검색에 실패했습니다.") from error
     except (
         URLError,
         TimeoutError,
@@ -348,14 +449,19 @@ def search_news(keyword: str, display: int = 20):
         json.JSONDecodeError,
     ) as error:
         print("NAVER ERROR:", error)
+        raise NewsServiceUnavailableError("NAVER 뉴스 검색에 실패했습니다.") from error
+
+    items = data.get("items", [])
+
+    if not isinstance(items, list):
         return []
 
-    return data.get("items", [])
+    return items
 
 
-def fetch_article_text(url: str):
+def fetch_article_text(url: str, deadline: float | None = None):
     if not url:
-        return ""
+        return None
 
     request = Request(
         url,
@@ -369,9 +475,13 @@ def fetch_article_text(url: str):
     )
 
     try:
-        with urlopen(request, timeout=8) as response:
+        timeout = remaining_timeout(deadline, ARTICLE_FETCH_TIMEOUT_SECONDS)
+
+        with urlopen(request, timeout=timeout) as response:
             content_type = response.headers.get_content_charset() or "utf-8"
             html = response.read().decode(content_type, errors="ignore")
+    except NewsCollectionTimeout:
+        raise
     except (
         HTTPError,
         URLError,
@@ -384,7 +494,7 @@ def fetch_article_text(url: str):
         OSError,
     ) as error:
         print("ARTICLE FETCH ERROR:", url, error)
-        return ""
+        return None
 
     try:
         parser = TextExtractor()
@@ -394,7 +504,7 @@ def fetch_article_text(url: str):
         return parser.get_text()
     except Exception as error:
         print("ARTICLE PARSE ERROR:", url, error)
-        return ""
+        return None
 
 
 def get_searchable_text(raw_item: dict, article_text: str = ""):
@@ -422,7 +532,10 @@ def get_published_datetime(raw_item: dict):
         return datetime.min.replace(tzinfo=timezone.utc)
 
 
-def is_article_text_valid(article_text: str):
+def is_article_text_valid(article_text: str | None):
+    if not article_text:
+        return False
+
     article_text = normalize_text(article_text)
 
     if len(article_text) < MIN_ARTICLE_TEXT_LENGTH:
@@ -679,11 +792,16 @@ def validate_summary_result(summary: dict):
     }
 
 
-def summarize_article_with_ai(title: str, description: str, article_text: str):
+def summarize_article_with_ai(
+    title: str,
+    description: str,
+    article_text: str,
+    deadline: float | None = None,
+):
     api_key = get_news_ai_api_key()
 
     if not api_key:
-        return None
+        raise NewsServiceUnavailableError("NEWS_AI_API_KEY가 없습니다.")
 
     payload = {
         "model": get_news_ai_model(),
@@ -760,8 +878,12 @@ def summarize_article_with_ai(title: str, description: str, article_text: str):
     )
 
     try:
-        with urlopen(request, timeout=30) as response:
+        timeout = remaining_timeout(deadline, NEWS_AI_TIMEOUT_SECONDS)
+
+        with urlopen(request, timeout=timeout) as response:
             response_data = json.loads(response.read().decode("utf-8"))
+    except NewsCollectionTimeout:
+        raise
     except HTTPError as error:
         error_body = error.read().decode("utf-8", errors="ignore")
         print("NEWS AI HTTP ERROR:", error.code, error.reason)
@@ -792,7 +914,10 @@ def summarize_article_with_ai(title: str, description: str, article_text: str):
         return None
 
 
-def prepare_news_candidate(raw_item: dict):
+def prepare_news_candidate(
+    raw_item: dict,
+    deadline: float | None = None,
+):
     title = clean_naver_text(raw_item.get("title", ""))
     description = clean_naver_text(raw_item.get("description", ""))
     link = raw_item.get("originallink") or raw_item.get("link") or ""
@@ -800,11 +925,10 @@ def prepare_news_candidate(raw_item: dict):
     if not link:
         return None
 
-    try:
-        article_text = fetch_article_text(link)
-    except Exception as error:
-        print("ARTICLE PREPARE ERROR:", link, error)
-        return None
+    article_text = fetch_article_text(link, deadline=deadline)
+
+    if article_text is None:
+        raise ArticleFetchFailed(link)
 
     if not is_article_text_valid(article_text):
         return None
@@ -822,16 +946,16 @@ def prepare_news_candidate(raw_item: dict):
     }
 
 
-def build_news_item(candidate: dict):
-    try:
-        summary = summarize_article_with_ai(
-            title=candidate["title"],
-            description=candidate["description"],
-            article_text=candidate["articleText"],
-        )
-    except Exception as error:
-        print("NEWS SUMMARY ERROR:", candidate.get("link", ""), error)
-        return None
+def build_news_item(
+    candidate: dict,
+    deadline: float | None = None,
+):
+    summary = summarize_article_with_ai(
+        title=candidate["title"],
+        description=candidate["description"],
+        article_text=candidate["articleText"],
+        deadline=deadline,
+    )
 
     if not summary:
         return None
@@ -844,27 +968,219 @@ def build_news_item(candidate: dict):
     }
 
 
-def collect_foreigner_news(total_limit: int = 4, display_per_keyword: int = 20):
-    candidates = []
+def collect_raw_news_items(
+    deadline: float | None = None,
+    display_per_keyword: int = NEWS_DISPLAY_PER_KEYWORD,
+):
+    raw_items = []
     seen_links = set()
+    search_success_count = 0
+    search_error_count = 0
 
-    for keyword in get_keywords():
-        for raw_item in search_news(keyword, display=display_per_keyword):
+    keywords = get_keywords()[:NEWS_MAX_KEYWORDS_PER_REQUEST]
+
+    for keyword in keywords:
+        ensure_time_left(deadline)
+
+        try:
+            items = search_news(
+                keyword,
+                display=display_per_keyword,
+                deadline=deadline,
+            )
+            search_success_count += 1
+        except NewsCollectionTimeout:
+            raise
+        except NewsServiceUnavailableError as error:
+            print("NAVER SEARCH SKIP:", keyword, error)
+            search_error_count += 1
+            continue
+
+        for raw_item in items:
             link = raw_item.get("originallink") or raw_item.get("link")
 
             if not link or link in seen_links:
                 continue
 
             seen_links.add(link)
+            raw_items.append(raw_item)
+
+            if len(raw_items) >= NEWS_MAX_RAW_ITEMS:
+                break
+
+        if len(raw_items) >= NEWS_MAX_RAW_ITEMS:
+            break
+
+    if search_success_count == 0 and search_error_count > 0:
+        raise NewsServiceUnavailableError("NAVER 뉴스 검색이 모두 실패했습니다.")
+
+    return raw_items
+
+
+def prepare_news_candidates(
+    raw_items: list[dict],
+    deadline: float | None = None,
+):
+    if not raw_items:
+        return [], 0, False
+
+    candidates = []
+    fetch_failure_count = 0
+    timed_out = False
+    max_candidate_count = max(NEWS_TOTAL_LIMIT * 3, NEWS_TOTAL_LIMIT)
+
+    executor = ThreadPoolExecutor(max_workers=ARTICLE_FETCH_WORKERS)
+    futures = {
+        executor.submit(
+            prepare_news_candidate,
+            raw_item,
+            deadline,
+        ): raw_item
+        for raw_item in raw_items
+    }
+
+    try:
+        timeout = remaining_timeout(deadline, NEWS_TOTAL_TIMEOUT_SECONDS)
+
+        for future in as_completed(futures, timeout=timeout):
+            raw_item = futures[future]
+            link = raw_item.get("originallink") or raw_item.get("link") or ""
 
             try:
-                candidate = prepare_news_candidate(raw_item)
+                candidate = future.result()
+            except ArticleFetchFailed as error:
+                print("ARTICLE FETCH SKIP:", error)
+                fetch_failure_count += 1
+                continue
+            except NewsCollectionTimeout as error:
+                print("ARTICLE FETCH TIMEOUT:", error)
+                timed_out = True
+                break
             except Exception as error:
                 print("NEWS CANDIDATE ERROR:", link, error)
                 continue
 
             if candidate:
                 candidates.append(candidate)
+
+            if len(candidates) >= max_candidate_count:
+                break
+
+            try:
+                ensure_time_left(deadline)
+            except NewsCollectionTimeout as error:
+                print("ARTICLE FETCH TIMEOUT:", error)
+                timed_out = True
+                break
+
+    except FuturesTimeoutError:
+        print("ARTICLE FETCH TOTAL TIMEOUT")
+        timed_out = True
+    finally:
+        for future in futures:
+            future.cancel()
+
+        executor.shutdown(wait=False, cancel_futures=True)
+
+    return candidates, fetch_failure_count, timed_out
+
+
+def build_news_items_parallel(
+    candidates: list[dict],
+    total_limit: int,
+    deadline: float | None = None,
+):
+    if not candidates:
+        return [], 0, False
+
+    news_items_by_index = {}
+    summary_failure_count = 0
+    timed_out = False
+    summary_candidates = candidates[: max(total_limit * 2, total_limit)]
+
+    executor = ThreadPoolExecutor(max_workers=SUMMARY_WORKERS)
+    futures = {
+        executor.submit(
+            build_news_item,
+            candidate,
+            deadline,
+        ): index
+        for index, candidate in enumerate(summary_candidates)
+    }
+
+    try:
+        timeout = remaining_timeout(deadline, NEWS_TOTAL_TIMEOUT_SECONDS)
+
+        for future in as_completed(futures, timeout=timeout):
+            index = futures[future]
+
+            try:
+                news_item = future.result()
+            except NewsCollectionTimeout as error:
+                print("NEWS SUMMARY TIMEOUT:", error)
+                timed_out = True
+                break
+            except Exception as error:
+                print("NEWS SUMMARY ERROR:", error)
+                summary_failure_count += 1
+                continue
+
+            if news_item:
+                news_items_by_index[index] = news_item
+            else:
+                summary_failure_count += 1
+
+            if len(news_items_by_index) >= total_limit:
+                break
+
+            try:
+                ensure_time_left(deadline)
+            except NewsCollectionTimeout as error:
+                print("NEWS SUMMARY TIMEOUT:", error)
+                timed_out = True
+                break
+
+    except FuturesTimeoutError:
+        print("NEWS SUMMARY TOTAL TIMEOUT")
+        timed_out = True
+    finally:
+        for future in futures:
+            future.cancel()
+
+        executor.shutdown(wait=False, cancel_futures=True)
+
+    news_items = [
+        news_items_by_index[index]
+        for index in sorted(news_items_by_index)
+    ]
+
+    return news_items[:total_limit], summary_failure_count, timed_out
+
+
+def collect_foreigner_news(
+    total_limit: int = NEWS_TOTAL_LIMIT,
+    display_per_keyword: int = NEWS_DISPLAY_PER_KEYWORD,
+):
+    deadline = make_deadline()
+
+    raw_items = collect_raw_news_items(
+        deadline=deadline,
+        display_per_keyword=display_per_keyword,
+    )
+
+    if not raw_items:
+        return []
+
+    candidates, fetch_failure_count, fetch_timed_out = prepare_news_candidates(
+        raw_items=raw_items,
+        deadline=deadline,
+    )
+
+    if not candidates:
+        if fetch_timed_out or fetch_failure_count >= len(raw_items):
+            raise NewsServiceUnavailableError("기사 원문 수집에 실패했습니다.")
+
+        return []
 
     candidates.sort(
         key=lambda item: (
@@ -876,28 +1192,133 @@ def collect_foreigner_news(total_limit: int = 4, display_per_keyword: int = 20):
 
     unique_candidates = remove_duplicate_news(candidates)
 
-    news_items = []
+    news_items, summary_failure_count, summary_timed_out = build_news_items_parallel(
+        candidates=unique_candidates,
+        total_limit=total_limit,
+        deadline=deadline,
+    )
 
-    for candidate in unique_candidates:
-        news_item = build_news_item(candidate)
-
-        if not news_item:
-            continue
-
-        news_items.append(news_item)
-
-        if len(news_items) >= total_limit:
-            break
+    if not news_items and unique_candidates:
+        if summary_timed_out or summary_failure_count > 0:
+            raise NewsServiceUnavailableError("뉴스 요약에 실패했습니다.")
 
     return news_items
 
 
-def write_news_result(path: Path = NEWS_RESULT_PATH):
+def is_valid_news_item(item: dict):
+    if not isinstance(item, dict):
+        return False
+
+    if not isinstance(item.get("title"), str):
+        return False
+
+    if not isinstance(item.get("threeLineSummary"), list):
+        return False
+
+    if not all(
+        isinstance(line, str)
+        for line in item.get("threeLineSummary", [])
+    ):
+        return False
+
+    if not isinstance(item.get("detailedSummary"), str):
+        return False
+
+    if not isinstance(item.get("link"), str):
+        return False
+
+    return True
+
+
+def is_valid_news_result(data: dict):
+    if not isinstance(data, dict):
+        return False
+
+    news = data.get("news")
+
+    if not isinstance(news, list):
+        return False
+
+    return all(is_valid_news_item(item) for item in news)
+
+
+def read_cached_news_result(path: Path = NEWS_RESULT_PATH):
+    if not path.exists():
+        return None
+
+    try:
+        with open(path, "r", encoding="utf-8") as file:
+            data = json.load(file)
+    except (OSError, json.JSONDecodeError) as error:
+        print("NEWS CACHE READ ERROR:", error)
+        return None
+
+    if not is_valid_news_result(data):
+        print("NEWS CACHE INVALID:", path)
+        return None
+
+    return data
+
+
+def save_news_result(
+    result: dict,
+    path: Path = NEWS_RESULT_PATH,
+):
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    temp_path = path.with_suffix(path.suffix + ".tmp")
+
+    with open(temp_path, "w", encoding="utf-8") as file:
+        json.dump(result, file, ensure_ascii=False, indent=2)
+
+    temp_path.replace(path)
+
+
+def refresh_news_result(path: Path = NEWS_RESULT_PATH):
     result = {
         "news": collect_foreigner_news(),
     }
 
-    with open(path, "w", encoding="utf-8") as file:
-        json.dump(result, file, ensure_ascii=False, indent=2)
+    save_news_result(result, path=path)
 
     return result
+
+
+def raise_news_service_unavailable(error: Exception):
+    print("NEWS SERVICE UNAVAILABLE:", error)
+
+    raise HTTPException(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail=NEWS_SERVICE_UNAVAILABLE_DETAIL,
+    )
+
+
+def write_news_result(
+    path: Path = NEWS_RESULT_PATH,
+    force_refresh: bool = False,
+):
+    if not force_refresh:
+        cached_result = read_cached_news_result(path)
+
+        if cached_result is not None:
+            return cached_result
+
+    try:
+        return refresh_news_result(path=path)
+    except (
+        NewsCollectionTimeout,
+        NewsServiceUnavailableError,
+    ) as error:
+        cached_result = read_cached_news_result(path)
+
+        if cached_result is not None:
+            return cached_result
+
+        raise_news_service_unavailable(error)
+    except Exception as error:
+        cached_result = read_cached_news_result(path)
+
+        if cached_result is not None:
+            return cached_result
+
+        raise_news_service_unavailable(error)
