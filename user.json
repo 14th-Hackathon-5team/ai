@@ -1,0 +1,19 @@
+{
+  "userId": 1001,
+  "nationality": "Vietnam",
+  "birthYear": 2004,
+  "userStatus": "LANGUAGE_STUDENT",
+  "schoolName": "Seoul Korean Language Institute",
+  "entryDate": "2026-06-01",
+  "visaType": "D4",
+  "hasAlienRegistration": false,
+  "stayExpirationDate": "2026-10-15",
+  "housingType": "DORMITORY",
+  "isParentSupported": false,
+  "partTimeStatus": "SEARCHING",
+  "partTimeStartDate": null,
+  "hasPartTimePermit": false,
+  "currentTopikLevel": "LEVEL_3",
+  "targetTopikLevel": "LEVEL_4",
+  "language": "KOREAN"
+}

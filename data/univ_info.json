@@ -1,0 +1,2385 @@
+[
+  {
+    "schoolName": "한빛국제대학교",
+    "region": "부산광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2026-09-01",
+      "end": "2026-10-16"
+    },
+    "document_submission_schedule": {
+      "start": "2026-09-01",
+      "end": "2026-10-23"
+    },
+    "document_evaluation_schedule": {
+      "start": "2026-10-26",
+      "end": "2026-11-13"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2026-11-21",
+      "type": "온라인 화상 면접"
+    },
+    "final_result_date": "2026-12-04",
+    "payment_schedule": {
+      "start": "2026-12-14",
+      "end": "2026-12-18"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 대한민국 국적이 아닌 외국인",
+      "academic": "국내외 고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "고등학교 졸업증명서",
+      "고등학교 전 학년 성적증명서",
+      "지원자와 부모의 여권 사본",
+      "출생증명서 또는 가족관계증명서",
+      "TOPIK 또는 공인영어성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 또는 영사확인 서류"
+    ],
+    "evaluation_ratio": {
+      "document": "70%",
+      "interview": "30%"
+    }
+  },
+  {
+    "schoolName": "미래글로벌대학교",
+    "region": "대전광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2026-09-08",
+      "end": "2026-10-23"
+    },
+    "document_submission_schedule": {
+      "start": "2026-09-08",
+      "end": "2026-10-30"
+    },
+    "document_evaluation_schedule": {
+      "start": "2026-11-02",
+      "end": "2026-11-20"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2026-11-28",
+      "type": "온라인 개별 면접"
+    },
+    "final_result_date": "2026-12-11",
+    "payment_schedule": {
+      "start": "2026-12-21",
+      "end": "2026-12-25"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 보유한 자",
+      "academic": "고등학교 졸업 이상의 학력을 가진 자",
+      "language": "TOPIK 4급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업증명서",
+      "고등학교 성적증명서",
+      "지원자 여권 사본",
+      "부모 여권 사본",
+      "가족관계 확인서류",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "학력인증서류"
+    ],
+    "evaluation_ratio": {
+      "document": "60%",
+      "interview": "40%"
+    }
+  },
+  {
+    "schoolName": "새롬대학교",
+    "region": "광주광역시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2026-09-15",
+      "end": "2026-10-30"
+    },
+    "document_submission_schedule": {
+      "start": "2026-09-15",
+      "end": "2026-11-06"
+    },
+    "document_evaluation_schedule": {
+      "start": "2026-11-09",
+      "end": "2026-11-27"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2026-12-04",
+    "payment_schedule": {
+      "start": "2026-12-14",
+      "end": "2026-12-18"
+    },
+    "admission_eligibility": {
+      "nationality": "부모와 지원자 모두 외국 국적을 보유한 외국인",
+      "academic": "12년제 초중고 교육과정을 이수하고 고등학교를 졸업한 자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "온라인 입학지원서",
+      "고등학교 졸업증명서",
+      "고등학교 전 학년 성적증명서",
+      "지원자 및 부모 여권 사본",
+      "출생증명서",
+      "어학능력 증명서",
+      "자기소개서",
+      "학업계획서",
+      "개인정보 제공 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "청람과학대학교",
+    "region": "대구광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2026-09-22",
+      "end": "2026-11-06"
+    },
+    "document_submission_schedule": {
+      "start": "2026-09-22",
+      "end": "2026-11-13"
+    },
+    "document_evaluation_schedule": {
+      "start": "2026-11-16",
+      "end": "2026-12-04"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2026-12-12",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2026-12-18",
+    "payment_schedule": {
+      "start": "2027-01-04",
+      "end": "2027-01-08"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적이 없는 외국인 및 부모 모두 외국인인 자",
+      "academic": "국내외 고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 4급 이상 또는 TOEFL iBT 80점 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "고등학교 졸업(예정)증명서",
+      "고등학교 성적증명서",
+      "여권 사본",
+      "부모 국적증명서",
+      "가족관계증명서",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "포트폴리오(예체능 지원자)"
+    ],
+    "evaluation_ratio": {
+      "document": "50%",
+      "interview": "50%"
+    }
+  },
+  {
+    "schoolName": "동해국립대학교",
+    "region": "강원특별자치도",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2026-10-01",
+      "end": "2026-11-13"
+    },
+    "document_submission_schedule": {
+      "start": "2026-10-01",
+      "end": "2026-11-20"
+    },
+    "document_evaluation_schedule": {
+      "start": "2026-11-23",
+      "end": "2026-12-11"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2026-12-19",
+      "type": "온라인 다대일 면접"
+    },
+    "final_result_date": "2026-12-24",
+    "payment_schedule": {
+      "start": "2027-01-11",
+      "end": "2027-01-15"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모가 모두 외국 국적을 가진 자",
+      "academic": "고등학교 졸업 또는 동등 이상의 학력 인정자",
+      "language": "TOPIK 3급 이상 또는 TOEIC 700점 이상"
+    },
+    "documents": [
+      "입학원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "출생증명서",
+      "어학성적증명서",
+      "자기소개서",
+      "학업계획서",
+      "학력조회 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "70%",
+      "interview": "30%"
+    }
+  },
+  {
+    "schoolName": "서린대학교",
+    "region": "서울특별시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2026-10-06",
+      "end": "2026-11-20"
+    },
+    "document_submission_schedule": {
+      "start": "2026-10-06",
+      "end": "2026-11-27"
+    },
+    "document_evaluation_schedule": {
+      "start": "2026-11-30",
+      "end": "2026-12-18"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2026-12-26",
+      "type": "온라인 화상 면접"
+    },
+    "final_result_date": "2027-01-08",
+    "payment_schedule": {
+      "start": "2027-01-18",
+      "end": "2027-01-22"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국인인 자",
+      "academic": "국내외 고등학교 졸업자",
+      "language": "TOPIK 4급 이상 또는 IELTS 6.0 이상"
+    },
+    "documents": [
+      "온라인 입학지원서",
+      "고등학교 졸업증명서",
+      "고등학교 전 학년 성적증명서",
+      "지원자 및 부모 여권 사본",
+      "가족관계 확인서",
+      "TOPIK 또는 IELTS 성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 학력서류"
+    ],
+    "evaluation_ratio": {
+      "document": "65%",
+      "interview": "35%"
+    }
+  },
+  {
+    "schoolName": "가온대학교",
+    "region": "경기도 수원시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2026-10-13",
+      "end": "2026-11-27"
+    },
+    "document_submission_schedule": {
+      "start": "2026-10-13",
+      "end": "2026-12-04"
+    },
+    "document_evaluation_schedule": {
+      "start": "2026-12-07",
+      "end": "2026-12-24"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-01-08",
+    "payment_schedule": {
+      "start": "2027-01-18",
+      "end": "2027-01-22"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 양친 모두 대한민국 국적을 보유하지 않은 자",
+      "academic": "고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "고등학교 졸업증명서",
+      "성적증명서",
+      "지원자 여권 사본",
+      "부모 여권 사본",
+      "출생증명서 또는 가족관계서류",
+      "어학성적표",
+      "자기소개서",
+      "학업계획서",
+      "번역공증본"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "누리국제대학교",
+    "region": "인천광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2026-10-20",
+      "end": "2026-12-04"
+    },
+    "document_submission_schedule": {
+      "start": "2026-10-20",
+      "end": "2026-12-11"
+    },
+    "document_evaluation_schedule": {
+      "start": "2026-12-14",
+      "end": "2027-01-04"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-01-09",
+      "type": "온라인 개별 면접"
+    },
+    "final_result_date": "2027-01-15",
+    "payment_schedule": {
+      "start": "2027-01-25",
+      "end": "2027-01-29"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 보유한 자",
+      "academic": "국내외 고등학교 졸업 및 학력 인증이 가능한 자",
+      "language": "TOPIK 4급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "여권 사본",
+      "부모 국적증명서",
+      "가족관계증명서",
+      "TOPIK 또는 IELTS 성적표",
+      "자기소개서",
+      "학업계획서",
+      "재정증명서(합격 후)"
+    ],
+    "evaluation_ratio": {
+      "document": "60%",
+      "interview": "40%"
+    }
+  },
+  {
+    "schoolName": "솔빛대학교",
+    "region": "충청북도 청주시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2026-10-27",
+      "end": "2026-12-11"
+    },
+    "document_submission_schedule": {
+      "start": "2026-10-27",
+      "end": "2026-12-18"
+    },
+    "document_evaluation_schedule": {
+      "start": "2026-12-21",
+      "end": "2027-01-08"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-01-16",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2027-01-22",
+    "payment_schedule": {
+      "start": "2027-02-01",
+      "end": "2027-02-05"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적이 없는 외국인",
+      "academic": "고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 TOEFL iBT 70점 이상"
+    },
+    "documents": [
+      "온라인 원서",
+      "고등학교 졸업(예정)증명서",
+      "고등학교 성적증명서",
+      "지원자와 부모의 여권",
+      "출생증명서",
+      "어학능력 증빙서류",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 또는 영사확인서"
+    ],
+    "evaluation_ratio": {
+      "document": "70%",
+      "interview": "30%"
+    }
+  },
+  {
+    "schoolName": "해담대학교",
+    "region": "전라남도 목포시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2026-11-03",
+      "end": "2026-12-18"
+    },
+    "document_submission_schedule": {
+      "start": "2026-11-03",
+      "end": "2026-12-24"
+    },
+    "document_evaluation_schedule": {
+      "start": "2026-12-28",
+      "end": "2027-01-15"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-01-22",
+    "payment_schedule": {
+      "start": "2027-02-01",
+      "end": "2027-02-05"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 가진 자",
+      "academic": "12년제 초중고 교육과정 이수자",
+      "language": "TOPIK 3급 이상 또는 영어 수업 이수 증명"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "가족관계 증명서",
+      "TOPIK 또는 영어 수업 증명서",
+      "자기소개서",
+      "학업계획서",
+      "개인정보 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "별무리대학교",
+    "region": "제주특별자치도",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2026-11-10",
+      "end": "2026-12-24"
+    },
+    "document_submission_schedule": {
+      "start": "2026-11-10",
+      "end": "2027-01-04"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-01-07",
+      "end": "2027-01-22"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-01-30",
+      "type": "온라인 다대일 면접"
+    },
+    "final_result_date": "2027-02-05",
+    "payment_schedule": {
+      "start": "2027-02-15",
+      "end": "2027-02-19"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 대한민국 국적이 아닌 자",
+      "academic": "고등학교 졸업 또는 졸업예정자",
+      "language": "TOPIK 4급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "입학원서",
+      "고등학교 졸업증명서",
+      "고등학교 성적증명서",
+      "여권 사본",
+      "부모 여권 사본",
+      "출생증명서",
+      "어학성적증명서",
+      "자기소개서",
+      "학업계획서",
+      "학력인증서류"
+    ],
+    "evaluation_ratio": {
+      "document": "55%",
+      "interview": "45%"
+    }
+  },
+  {
+    "schoolName": "온누리대학교",
+    "region": "서울특별시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2026-11-17",
+      "end": "2027-01-08"
+    },
+    "document_submission_schedule": {
+      "start": "2026-11-17",
+      "end": "2027-01-15"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-01-18",
+      "end": "2027-02-05"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-02-13",
+      "type": "온라인 화상 면접"
+    },
+    "final_result_date": "2027-02-19",
+    "payment_schedule": {
+      "start": "2027-03-01",
+      "end": "2027-03-05"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 친권자 모두 외국인인 자",
+      "academic": "국내외 고등학교 졸업자",
+      "language": "TOPIK 3급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "온라인 입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 및 부모 여권",
+      "가족관계 확인서류",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "번역공증본"
+    ],
+    "evaluation_ratio": {
+      "document": "60%",
+      "interview": "40%"
+    }
+  },
+  {
+    "schoolName": "푸른미래대학교",
+    "region": "경상남도 창원시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2026-12-01",
+      "end": "2027-01-15"
+    },
+    "document_submission_schedule": {
+      "start": "2026-12-01",
+      "end": "2027-01-22"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-01-25",
+      "end": "2027-02-12"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-02-19",
+    "payment_schedule": {
+      "start": "2027-03-01",
+      "end": "2027-03-05"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모가 모두 외국 국적을 보유한 자",
+      "academic": "고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "고등학교 졸업증명서",
+      "전 학년 성적증명서",
+      "여권 사본",
+      "부모 국적 및 가족관계 서류",
+      "어학성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 서류"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "다온대학교",
+    "region": "경기도 성남시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2026-12-08",
+      "end": "2027-01-22"
+    },
+    "document_submission_schedule": {
+      "start": "2026-12-08",
+      "end": "2027-01-29"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-02-01",
+      "end": "2027-02-19"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-02-27",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2027-03-05",
+    "payment_schedule": {
+      "start": "2027-03-15",
+      "end": "2027-03-19"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국인인 자",
+      "academic": "국내외 고등학교 졸업 또는 동등 학력자",
+      "language": "TOPIK 4급 이상 또는 TOEFL iBT 80점 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "출생증명서 또는 가족관계증명서",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "면접참가 확인서"
+    ],
+    "evaluation_ratio": {
+      "document": "60%",
+      "interview": "40%"
+    }
+  },
+  {
+    "schoolName": "이음대학교",
+    "region": "울산광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2026-12-15",
+      "end": "2027-01-29"
+    },
+    "document_submission_schedule": {
+      "start": "2026-12-15",
+      "end": "2027-02-05"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-02-08",
+      "end": "2027-02-26"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-03-06",
+      "type": "온라인 개별 면접"
+    },
+    "final_result_date": "2027-03-12",
+    "payment_schedule": {
+      "start": "2027-03-22",
+      "end": "2027-03-26"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적을 보유하지 않은 지원자와 외국 국적의 부모",
+      "academic": "고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "온라인 입학원서",
+      "고교 졸업증명서",
+      "고교 성적증명서",
+      "지원자 및 부모 여권 사본",
+      "출생증명서",
+      "어학능력 증명서",
+      "자기소개서",
+      "학업계획서",
+      "학력조회 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "65%",
+      "interview": "35%"
+    }
+  },
+  {
+    "schoolName": "열린대학교",
+    "region": "충청남도 천안시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2027-01-05",
+      "end": "2027-02-19"
+    },
+    "document_submission_schedule": {
+      "start": "2027-01-05",
+      "end": "2027-02-26"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-03-01",
+      "end": "2027-03-19"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-03-26",
+    "payment_schedule": {
+      "start": "2027-04-05",
+      "end": "2027-04-09"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 양친 모두 외국 국적을 가진 자",
+      "academic": "고등학교 졸업 및 학력인증이 가능한 자",
+      "language": "TOPIK 3급 이상 또는 TOEIC 700점 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 여권 사본",
+      "부모 여권 사본",
+      "가족관계 서류",
+      "어학성적표",
+      "자기소개서",
+      "학업계획서",
+      "개인정보 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "참빛대학교",
+    "region": "전라북도 전주시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-01-12",
+      "end": "2027-02-26"
+    },
+    "document_submission_schedule": {
+      "start": "2027-01-12",
+      "end": "2027-03-05"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-03-08",
+      "end": "2027-03-26"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-04-03",
+      "type": "대면 다대일 면접"
+    },
+    "final_result_date": "2027-04-09",
+    "payment_schedule": {
+      "start": "2027-04-19",
+      "end": "2027-04-23"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국인인 자",
+      "academic": "국내외 고등학교 졸업자",
+      "language": "TOPIK 4급 이상 또는 IELTS 6.0 이상"
+    },
+    "documents": [
+      "입학원서",
+      "고등학교 졸업증명서",
+      "전 학년 성적증명서",
+      "여권 사본",
+      "부모 여권 사본",
+      "출생증명서",
+      "TOPIK 또는 IELTS 성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 인증서"
+    ],
+    "evaluation_ratio": {
+      "document": "50%",
+      "interview": "50%"
+    }
+  },
+  {
+    "schoolName": "세움대학교",
+    "region": "경상북도 포항시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-01-19",
+      "end": "2027-03-05"
+    },
+    "document_submission_schedule": {
+      "start": "2027-01-19",
+      "end": "2027-03-12"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-03-15",
+      "end": "2027-04-02"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-04-10",
+      "type": "온라인 화상 면접"
+    },
+    "final_result_date": "2027-04-16",
+    "payment_schedule": {
+      "start": "2027-04-26",
+      "end": "2027-04-30"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적이 없는 외국인",
+      "academic": "고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "온라인 입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 및 부모 여권",
+      "가족관계증명서",
+      "어학성적증명서",
+      "자기소개서",
+      "학업계획서",
+      "번역공증 서류"
+    ],
+    "evaluation_ratio": {
+      "document": "70%",
+      "interview": "30%"
+    }
+  },
+  {
+    "schoolName": "나래대학교",
+    "region": "서울특별시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-01-26",
+      "end": "2027-03-12"
+    },
+    "document_submission_schedule": {
+      "start": "2027-01-26",
+      "end": "2027-03-19"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-03-22",
+      "end": "2027-04-09"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-04-16",
+    "payment_schedule": {
+      "start": "2027-04-26",
+      "end": "2027-04-30"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 가진 자",
+      "academic": "국내외 고등학교 졸업자",
+      "language": "TOPIK 4급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "고교 졸업증명서",
+      "고교 성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "출생증명서 또는 가족관계서류",
+      "TOPIK 또는 IELTS 성적표",
+      "자기소개서",
+      "학업계획서",
+      "학력인증서류"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "더함대학교",
+    "region": "부산광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-02-02",
+      "end": "2027-03-19"
+    },
+    "document_submission_schedule": {
+      "start": "2027-02-02",
+      "end": "2027-03-26"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-03-29",
+      "end": "2027-04-16"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-04-24",
+      "type": "온라인 개별 면접"
+    },
+    "final_result_date": "2027-04-30",
+    "payment_schedule": {
+      "start": "2027-05-10",
+      "end": "2027-05-14"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모가 모두 외국 국적을 보유한 자",
+      "academic": "고등학교 졸업 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 및 부모의 여권 사본",
+      "가족관계 확인서류",
+      "어학능력 증명서",
+      "자기소개서",
+      "학업계획서",
+      "재정증명서(최종 합격 후)"
+    ],
+    "evaluation_ratio": {
+      "document": "60%",
+      "interview": "40%"
+    }
+  },
+  {
+    "schoolName": "아람대학교",
+    "region": "대전광역시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2027-02-09",
+      "end": "2027-03-26"
+    },
+    "document_submission_schedule": {
+      "start": "2027-02-09",
+      "end": "2027-04-02"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-04-05",
+      "end": "2027-04-23"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-05-01",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2027-05-07",
+    "payment_schedule": {
+      "start": "2027-05-17",
+      "end": "2027-05-21"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적을 보유하지 않은 외국인 및 외국 국적 부모",
+      "academic": "12년제 교육과정 이수 후 고등학교 졸업자",
+      "language": "TOPIK 3급 이상 또는 영어 공인성적 제출"
+    },
+    "documents": [
+      "온라인 원서",
+      "고등학교 졸업증명서",
+      "전 학년 성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "출생증명서",
+      "TOPIK 또는 영어성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 서류"
+    ],
+    "evaluation_ratio": {
+      "document": "70%",
+      "interview": "30%"
+    }
+  },
+  {
+    "schoolName": "라온대학교",
+    "region": "광주광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-02-16",
+      "end": "2027-04-02"
+    },
+    "document_submission_schedule": {
+      "start": "2027-02-16",
+      "end": "2027-04-09"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-04-12",
+      "end": "2027-04-30"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-05-07",
+    "payment_schedule": {
+      "start": "2027-05-17",
+      "end": "2027-05-21"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 가진 자",
+      "academic": "국내외 고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 4급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업(예정)증명서",
+      "성적증명서",
+      "지원자 및 부모 여권 사본",
+      "가족관계증명서",
+      "TOPIK 또는 IELTS 성적표",
+      "자기소개서",
+      "학업계획서",
+      "학력조회 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "도약대학교",
+    "region": "대구광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-02-23",
+      "end": "2027-04-09"
+    },
+    "document_submission_schedule": {
+      "start": "2027-02-23",
+      "end": "2027-04-16"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-04-19",
+      "end": "2027-05-07"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-05-15",
+      "type": "온라인 다대일 면접"
+    },
+    "final_result_date": "2027-05-21",
+    "payment_schedule": {
+      "start": "2027-05-31",
+      "end": "2027-06-04"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모가 모두 외국 국적을 보유한 자",
+      "academic": "고등학교 졸업자",
+      "language": "TOPIK 3급 이상 또는 TOEFL iBT 70점 이상"
+    },
+    "documents": [
+      "입학원서",
+      "고등학교 졸업증명서",
+      "고등학교 성적증명서",
+      "여권 사본",
+      "부모 여권 사본",
+      "출생증명서",
+      "어학성적증명서",
+      "자기소개서",
+      "학업계획서",
+      "번역공증본"
+    ],
+    "evaluation_ratio": {
+      "document": "55%",
+      "interview": "45%"
+    }
+  },
+  {
+    "schoolName": "한울대학교",
+    "region": "강원특별자치도",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2027-03-02",
+      "end": "2027-04-16"
+    },
+    "document_submission_schedule": {
+      "start": "2027-03-02",
+      "end": "2027-04-23"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-04-26",
+      "end": "2027-05-14"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-05-22",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2027-05-28",
+    "payment_schedule": {
+      "start": "2027-06-07",
+      "end": "2027-06-11"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적이 없는 지원자와 외국 국적의 부모",
+      "academic": "국내외 고등학교 졸업 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "온라인 입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "가족관계 확인서류",
+      "어학성적표",
+      "자기소개서",
+      "학업계획서",
+      "학력인증서류"
+    ],
+    "evaluation_ratio": {
+      "document": "70%",
+      "interview": "30%"
+    }
+  },
+  {
+    "schoolName": "새벽대학교",
+    "region": "충청북도 충주시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-03-09",
+      "end": "2027-04-23"
+    },
+    "document_submission_schedule": {
+      "start": "2027-03-09",
+      "end": "2027-04-30"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-05-03",
+      "end": "2027-05-21"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-05-28",
+    "payment_schedule": {
+      "start": "2027-06-07",
+      "end": "2027-06-11"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국인인 자",
+      "academic": "고등학교 졸업 이상의 학력 보유자",
+      "language": "TOPIK 4급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "고등학교 졸업증명서",
+      "전 학년 성적증명서",
+      "지원자 및 부모의 여권",
+      "출생증명서",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 또는 영사확인서"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "드림대학교",
+    "region": "경상남도 진주시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-03-16",
+      "end": "2027-04-30"
+    },
+    "document_submission_schedule": {
+      "start": "2027-03-16",
+      "end": "2027-05-07"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-05-10",
+      "end": "2027-05-28"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-06-05",
+      "type": "온라인 화상 면접"
+    },
+    "final_result_date": "2027-06-11",
+    "payment_schedule": {
+      "start": "2027-06-21",
+      "end": "2027-06-25"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모가 모두 외국 국적을 보유한 자",
+      "academic": "국내외 고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "온라인 원서",
+      "졸업증명서",
+      "성적증명서",
+      "여권 사본",
+      "부모 여권 사본",
+      "가족관계증명서",
+      "어학능력 증명서",
+      "자기소개서",
+      "학업계획서",
+      "재정증명서(합격 후)"
+    ],
+    "evaluation_ratio": {
+      "document": "60%",
+      "interview": "40%"
+    }
+  },
+  {
+    "schoolName": "으뜸대학교",
+    "region": "경기도 고양시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-03-23",
+      "end": "2027-05-07"
+    },
+    "document_submission_schedule": {
+      "start": "2027-03-23",
+      "end": "2027-05-14"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-05-17",
+      "end": "2027-06-04"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-06-12",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2027-06-18",
+    "payment_schedule": {
+      "start": "2027-06-28",
+      "end": "2027-07-02"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적이 없는 외국인",
+      "academic": "고등학교 졸업자",
+      "language": "TOPIK 4급 이상 또는 IELTS 6.0 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "고등학교 졸업증명서",
+      "성적증명서",
+      "지원자와 부모의 여권 사본",
+      "출생증명서",
+      "TOPIK 또는 IELTS 성적표",
+      "자기소개서",
+      "학업계획서",
+      "학력인증서류"
+    ],
+    "evaluation_ratio": {
+      "document": "50%",
+      "interview": "50%"
+    }
+  },
+  {
+    "schoolName": "비전국제대학교",
+    "region": "인천광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-03-30",
+      "end": "2027-05-14"
+    },
+    "document_submission_schedule": {
+      "start": "2027-03-30",
+      "end": "2027-05-21"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-05-24",
+      "end": "2027-06-11"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-06-18",
+    "payment_schedule": {
+      "start": "2027-06-28",
+      "end": "2027-07-02"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 가진 자",
+      "academic": "국내외 고등학교 졸업 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "입학원서",
+      "졸업증명서",
+      "고등학교 성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "가족관계 확인서류",
+      "어학성적표",
+      "자기소개서",
+      "학업계획서",
+      "번역공증본"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "공감대학교",
+    "region": "전라남도 순천시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2027-04-06",
+      "end": "2027-05-21"
+    },
+    "document_submission_schedule": {
+      "start": "2027-04-06",
+      "end": "2027-05-28"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-05-31",
+      "end": "2027-06-18"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-06-26",
+      "type": "온라인 개별 면접"
+    },
+    "final_result_date": "2027-07-02",
+    "payment_schedule": {
+      "start": "2027-07-12",
+      "end": "2027-07-16"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 대한민국 국적이 아닌 외국인",
+      "academic": "고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "온라인 입학지원서",
+      "고교 졸업증명서",
+      "고교 성적증명서",
+      "여권 사본",
+      "부모 여권 사본",
+      "출생증명서",
+      "TOPIK 또는 IELTS 성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 서류"
+    ],
+    "evaluation_ratio": {
+      "document": "65%",
+      "interview": "35%"
+    }
+  },
+  {
+    "schoolName": "선율대학교",
+    "region": "서울특별시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-04-13",
+      "end": "2027-05-28"
+    },
+    "document_submission_schedule": {
+      "start": "2027-04-13",
+      "end": "2027-06-04"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-06-07",
+      "end": "2027-06-25"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-07-03",
+      "type": "대면 실기 및 면접"
+    },
+    "final_result_date": "2027-07-09",
+    "payment_schedule": {
+      "start": "2027-07-19",
+      "end": "2027-07-23"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 보유한 자",
+      "academic": "고등학교 졸업 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 및 부모 여권",
+      "가족관계증명서",
+      "어학성적표",
+      "자기소개서",
+      "학업계획서",
+      "포트폴리오 또는 실기자료",
+      "학력인증서류"
+    ],
+    "evaluation_ratio": {
+      "document": "40%",
+      "interview": "60%"
+    }
+  },
+  {
+    "schoolName": "해오름대학교",
+    "region": "울산광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-04-20",
+      "end": "2027-06-04"
+    },
+    "document_submission_schedule": {
+      "start": "2027-04-20",
+      "end": "2027-06-11"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-06-14",
+      "end": "2027-07-02"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-07-09",
+    "payment_schedule": {
+      "start": "2027-07-19",
+      "end": "2027-07-23"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모가 모두 외국인인 자",
+      "academic": "국내외 고등학교 졸업자",
+      "language": "TOPIK 4급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "입학원서",
+      "고등학교 졸업증명서",
+      "전 학년 성적증명서",
+      "여권 사본",
+      "부모 국적증명서",
+      "출생증명서",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "개인정보 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "다솜대학교",
+    "region": "제주특별자치도",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2027-04-27",
+      "end": "2027-06-11"
+    },
+    "document_submission_schedule": {
+      "start": "2027-04-27",
+      "end": "2027-06-18"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-06-21",
+      "end": "2027-07-09"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-07-17",
+      "type": "온라인 화상 면접"
+    },
+    "final_result_date": "2027-07-23",
+    "payment_schedule": {
+      "start": "2027-08-02",
+      "end": "2027-08-06"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적이 없는 지원자와 외국 국적의 부모",
+      "academic": "고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "온라인 입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "가족관계 확인서류",
+      "어학성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 또는 영사확인서"
+    ],
+    "evaluation_ratio": {
+      "document": "70%",
+      "interview": "30%"
+    }
+  },
+  {
+    "schoolName": "푸름대학교",
+    "region": "경기도 안산시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-05-04",
+      "end": "2027-06-18"
+    },
+    "document_submission_schedule": {
+      "start": "2027-05-04",
+      "end": "2027-06-25"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-06-28",
+      "end": "2027-07-16"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-07-24",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2027-07-30",
+    "payment_schedule": {
+      "start": "2027-08-09",
+      "end": "2027-08-13"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 가진 자",
+      "academic": "국내외 고등학교 졸업 또는 졸업예정자",
+      "language": "TOPIK 4급 이상 또는 TOEFL iBT 80점 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자와 부모의 여권 사본",
+      "출생증명서",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "학력인증서류",
+      "재정증명서(합격 후)"
+    ],
+    "evaluation_ratio": {
+      "document": "60%",
+      "interview": "40%"
+    }
+  },
+  {
+    "schoolName": "솔샘대학교",
+    "region": "충청남도 공주시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2027-05-11",
+      "end": "2027-06-25"
+    },
+    "document_submission_schedule": {
+      "start": "2027-05-11",
+      "end": "2027-07-02"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-07-05",
+      "end": "2027-07-23"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-07-30",
+    "payment_schedule": {
+      "start": "2027-08-09",
+      "end": "2027-08-13"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국인인 자",
+      "academic": "12년제 교육과정을 이수한 고등학교 졸업자",
+      "language": "TOPIK 3급 이상 또는 영어 공인성적 제출"
+    },
+    "documents": [
+      "입학원서",
+      "고등학교 졸업증명서",
+      "전 학년 성적증명서",
+      "여권 사본",
+      "부모 여권 사본",
+      "가족관계증명서",
+      "TOPIK 또는 영어 성적표",
+      "자기소개서",
+      "학업계획서",
+      "학력조회 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "새결대학교",
+    "region": "전라북도 익산시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-05-18",
+      "end": "2027-07-02"
+    },
+    "document_submission_schedule": {
+      "start": "2027-05-18",
+      "end": "2027-07-09"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-07-12",
+      "end": "2027-07-30"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-08-07",
+      "type": "온라인 개별 면접"
+    },
+    "final_result_date": "2027-08-13",
+    "payment_schedule": {
+      "start": "2027-08-23",
+      "end": "2027-08-27"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모가 모두 외국 국적을 보유한 자",
+      "academic": "고등학교 졸업 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "온라인 원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 및 부모 여권",
+      "출생증명서",
+      "어학성적증명서",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 인증 학력서류"
+    ],
+    "evaluation_ratio": {
+      "document": "65%",
+      "interview": "35%"
+    }
+  },
+  {
+    "schoolName": "큰빛대학교",
+    "region": "경상북도 경주시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-05-25",
+      "end": "2027-07-09"
+    },
+    "document_submission_schedule": {
+      "start": "2027-05-25",
+      "end": "2027-07-16"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-07-19",
+      "end": "2027-08-06"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-08-14",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2027-08-20",
+    "payment_schedule": {
+      "start": "2027-08-30",
+      "end": "2027-09-03"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적이 없는 지원자와 외국 국적의 부모",
+      "academic": "국내외 고등학교 졸업자",
+      "language": "TOPIK 4급 이상 또는 IELTS 6.0 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "고등학교 졸업증명서",
+      "성적증명서",
+      "지원자 여권 사본",
+      "부모 여권 사본",
+      "가족관계 서류",
+      "TOPIK 또는 IELTS 성적표",
+      "자기소개서",
+      "학업계획서",
+      "번역공증본"
+    ],
+    "evaluation_ratio": {
+      "document": "50%",
+      "interview": "50%"
+    }
+  },
+  {
+    "schoolName": "어울림대학교",
+    "region": "부산광역시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2027-06-01",
+      "end": "2027-07-16"
+    },
+    "document_submission_schedule": {
+      "start": "2027-06-01",
+      "end": "2027-07-23"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-07-26",
+      "end": "2027-08-13"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-08-20",
+    "payment_schedule": {
+      "start": "2027-08-30",
+      "end": "2027-09-03"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 보유한 자",
+      "academic": "고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "입학원서",
+      "졸업증명서",
+      "전 학년 성적증명서",
+      "여권 사본",
+      "부모 여권 사본",
+      "출생증명서",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "개인정보 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "기린대학교",
+    "region": "강원특별자치도 춘천시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-06-08",
+      "end": "2027-07-23"
+    },
+    "document_submission_schedule": {
+      "start": "2027-06-08",
+      "end": "2027-07-30"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-08-02",
+      "end": "2027-08-20"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-08-28",
+      "type": "온라인 화상 면접"
+    },
+    "final_result_date": "2027-09-03",
+    "payment_schedule": {
+      "start": "2027-09-13",
+      "end": "2027-09-17"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 대한민국 국적이 아닌 외국인",
+      "academic": "국내외 고등학교 졸업자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "온라인 입학지원서",
+      "고등학교 졸업증명서",
+      "고등학교 성적증명서",
+      "지원자 및 부모 여권",
+      "가족관계 확인서류",
+      "어학성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 또는 영사확인서"
+    ],
+    "evaluation_ratio": {
+      "document": "70%",
+      "interview": "30%"
+    }
+  },
+  {
+    "schoolName": "별빛대학교",
+    "region": "대구광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-06-15",
+      "end": "2027-07-30"
+    },
+    "document_submission_schedule": {
+      "start": "2027-06-15",
+      "end": "2027-08-06"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-08-09",
+      "end": "2027-08-27"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-09-04",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2027-09-10",
+    "payment_schedule": {
+      "start": "2027-09-20",
+      "end": "2027-09-24"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 가진 자",
+      "academic": "고등학교 졸업 또는 졸업예정자",
+      "language": "TOPIK 4급 이상 또는 TOEFL iBT 80점 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "출생증명서 또는 가족관계증명서",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "재정증명서(합격 후)"
+    ],
+    "evaluation_ratio": {
+      "document": "60%",
+      "interview": "40%"
+    }
+  },
+  {
+    "schoolName": "나눔대학교",
+    "region": "광주광역시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2027-06-22",
+      "end": "2027-08-06"
+    },
+    "document_submission_schedule": {
+      "start": "2027-06-22",
+      "end": "2027-08-13"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-08-16",
+      "end": "2027-09-03"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-09-10",
+    "payment_schedule": {
+      "start": "2027-09-20",
+      "end": "2027-09-24"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 보유한 자",
+      "academic": "고등학교 졸업자 또는 동등 학력자",
+      "language": "TOPIK 3급 이상 또는 영어 공인성적 제출"
+    },
+    "documents": [
+      "입학원서",
+      "고등학교 졸업증명서",
+      "전 학년 성적증명서",
+      "여권 사본",
+      "부모 여권 사본",
+      "가족관계 증명서",
+      "어학성적표",
+      "자기소개서",
+      "학업계획서",
+      "학력조회 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "꿈빛대학교",
+    "region": "대전광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-06-29",
+      "end": "2027-08-13"
+    },
+    "document_submission_schedule": {
+      "start": "2027-06-29",
+      "end": "2027-08-20"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-08-23",
+      "end": "2027-09-10"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-09-18",
+      "type": "온라인 개별 면접"
+    },
+    "final_result_date": "2027-09-24",
+    "payment_schedule": {
+      "start": "2027-10-04",
+      "end": "2027-10-08"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적이 없는 지원자와 외국 국적 부모",
+      "academic": "국내외 고등학교 졸업자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "온라인 원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 및 부모 여권",
+      "출생증명서",
+      "TOPIK 또는 IELTS 성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 인증서"
+    ],
+    "evaluation_ratio": {
+      "document": "65%",
+      "interview": "35%"
+    }
+  },
+  {
+    "schoolName": "바람대학교",
+    "region": "전라남도 여수시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-07-06",
+      "end": "2027-08-20"
+    },
+    "document_submission_schedule": {
+      "start": "2027-07-06",
+      "end": "2027-08-27"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-08-30",
+      "end": "2027-09-17"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-09-25",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2027-10-01",
+    "payment_schedule": {
+      "start": "2027-10-11",
+      "end": "2027-10-15"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 가진 자",
+      "academic": "고등학교 졸업 또는 졸업예정자",
+      "language": "TOPIK 4급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "여권 사본",
+      "부모 여권 사본",
+      "가족관계증명서",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "번역공증본"
+    ],
+    "evaluation_ratio": {
+      "document": "50%",
+      "interview": "50%"
+    }
+  },
+  {
+    "schoolName": "한마음대학교",
+    "region": "경상남도 김해시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2027-07-13",
+      "end": "2027-08-27"
+    },
+    "document_submission_schedule": {
+      "start": "2027-07-13",
+      "end": "2027-09-03"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-09-06",
+      "end": "2027-09-24"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-10-01",
+    "payment_schedule": {
+      "start": "2027-10-11",
+      "end": "2027-10-15"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모가 모두 외국 국적을 보유한 자",
+      "academic": "국내외 고등학교 졸업자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "입학원서",
+      "고등학교 졸업증명서",
+      "고등학교 전 학년 성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "출생증명서",
+      "어학능력 증명서",
+      "자기소개서",
+      "학업계획서",
+      "개인정보 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "온빛대학교",
+    "region": "서울특별시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-07-20",
+      "end": "2027-09-03"
+    },
+    "document_submission_schedule": {
+      "start": "2027-07-20",
+      "end": "2027-09-10"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-09-13",
+      "end": "2027-10-01"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-10-09",
+      "type": "온라인 화상 면접"
+    },
+    "final_result_date": "2027-10-15",
+    "payment_schedule": {
+      "start": "2027-10-25",
+      "end": "2027-10-29"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 가진 자",
+      "academic": "고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "온라인 입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 및 부모 여권 사본",
+      "가족관계 확인서류",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "학력인증서류"
+    ],
+    "evaluation_ratio": {
+      "document": "70%",
+      "interview": "30%"
+    }
+  },
+  {
+    "schoolName": "채움대학교",
+    "region": "경기도 용인시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-07-27",
+      "end": "2027-09-10"
+    },
+    "document_submission_schedule": {
+      "start": "2027-07-27",
+      "end": "2027-09-17"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-09-20",
+      "end": "2027-10-08"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-10-16",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2027-10-22",
+    "payment_schedule": {
+      "start": "2027-11-01",
+      "end": "2027-11-05"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적이 없는 외국인 및 외국 국적 부모",
+      "academic": "국내외 고등학교 졸업자",
+      "language": "TOPIK 4급 이상 또는 IELTS 6.0 이상"
+    },
+    "documents": [
+      "입학원서",
+      "고등학교 졸업증명서",
+      "성적증명서",
+      "여권 사본",
+      "부모 여권 사본",
+      "출생증명서 또는 가족관계증명서",
+      "TOPIK 또는 IELTS 성적표",
+      "자기소개서",
+      "학업계획서",
+      "재정증명서(최종 합격 후)"
+    ],
+    "evaluation_ratio": {
+      "document": "60%",
+      "interview": "40%"
+    }
+  },
+  {
+    "schoolName": "미래온대학교",
+    "region": "부산광역시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2027-08-03",
+      "end": "2027-09-17"
+    },
+    "document_submission_schedule": {
+      "start": "2027-08-03",
+      "end": "2027-09-24"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-09-27",
+      "end": "2027-10-15"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-10-22",
+    "payment_schedule": {
+      "start": "2027-11-01",
+      "end": "2027-11-05"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 가진 자",
+      "academic": "고등학교 졸업 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 영어 공인성적 제출"
+    },
+    "documents": [
+      "입학지원서",
+      "졸업증명서",
+      "전 학년 성적증명서",
+      "지원자 및 부모 여권",
+      "가족관계증명서",
+      "어학성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 또는 영사확인 서류"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "다빛대학교",
+    "region": "인천광역시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-08-10",
+      "end": "2027-09-24"
+    },
+    "document_submission_schedule": {
+      "start": "2027-08-10",
+      "end": "2027-10-01"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-10-04",
+      "end": "2027-10-22"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-10-30",
+      "type": "온라인 개별 면접"
+    },
+    "final_result_date": "2027-11-05",
+    "payment_schedule": {
+      "start": "2027-11-15",
+      "end": "2027-11-19"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국인인 자",
+      "academic": "국내외 고등학교 졸업자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "온라인 원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "출생증명서",
+      "TOPIK 또는 IELTS 성적표",
+      "자기소개서",
+      "학업계획서",
+      "학력인증서류"
+    ],
+    "evaluation_ratio": {
+      "document": "65%",
+      "interview": "35%"
+    }
+  },
+  {
+    "schoolName": "길벗대학교",
+    "region": "전라북도 군산시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-08-17",
+      "end": "2027-10-01"
+    },
+    "document_submission_schedule": {
+      "start": "2027-08-17",
+      "end": "2027-10-08"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-10-11",
+      "end": "2027-10-29"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-11-06",
+      "type": "대면 개별 면접"
+    },
+    "final_result_date": "2027-11-12",
+    "payment_schedule": {
+      "start": "2027-11-22",
+      "end": "2027-11-26"
+    },
+    "admission_eligibility": {
+      "nationality": "대한민국 국적이 없는 지원자와 외국 국적의 부모",
+      "academic": "고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 4급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "입학지원서",
+      "고등학교 졸업증명서",
+      "고등학교 성적증명서",
+      "지원자 및 부모 여권 사본",
+      "가족관계 확인서류",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "번역공증본",
+      "재정증명서(합격 후)"
+    ],
+    "evaluation_ratio": {
+      "document": "50%",
+      "interview": "50%"
+    }
+  },
+  {
+    "schoolName": "희망대학교",
+    "region": "충청남도 아산시",
+    "university_type": "국립",
+    "application_schedule": {
+      "start": "2027-08-24",
+      "end": "2027-10-08"
+    },
+    "document_submission_schedule": {
+      "start": "2027-08-24",
+      "end": "2027-10-15"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-10-18",
+      "end": "2027-11-05"
+    },
+    "interview": {
+      "yn": false,
+      "date": null,
+      "type": null
+    },
+    "final_result_date": "2027-11-12",
+    "payment_schedule": {
+      "start": "2027-11-22",
+      "end": "2027-11-26"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 보유한 자",
+      "academic": "국내외 고등학교 졸업 또는 동등 학력자",
+      "language": "TOPIK 3급 이상 또는 IELTS 5.5 이상"
+    },
+    "documents": [
+      "입학원서",
+      "졸업증명서",
+      "전 학년 성적증명서",
+      "여권 사본",
+      "부모 여권 사본",
+      "출생증명서 또는 가족관계서류",
+      "어학성적표",
+      "자기소개서",
+      "학업계획서",
+      "개인정보 동의서"
+    ],
+    "evaluation_ratio": {
+      "document": "100%",
+      "interview": "0%"
+    }
+  },
+  {
+    "schoolName": "새누리대학교",
+    "region": "서울특별시",
+    "university_type": "사립",
+    "application_schedule": {
+      "start": "2027-09-01",
+      "end": "2027-10-15"
+    },
+    "document_submission_schedule": {
+      "start": "2027-09-01",
+      "end": "2027-10-22"
+    },
+    "document_evaluation_schedule": {
+      "start": "2027-10-25",
+      "end": "2027-11-12"
+    },
+    "interview": {
+      "yn": true,
+      "date": "2027-11-20",
+      "type": "온라인 화상 면접"
+    },
+    "final_result_date": "2027-11-26",
+    "payment_schedule": {
+      "start": "2027-12-06",
+      "end": "2027-12-10"
+    },
+    "admission_eligibility": {
+      "nationality": "지원자와 부모 모두 외국 국적을 가진 자",
+      "academic": "고등학교 졸업자 또는 졸업예정자",
+      "language": "TOPIK 3급 이상 또는 TOEFL iBT 71점 이상"
+    },
+    "documents": [
+      "온라인 입학지원서",
+      "졸업증명서",
+      "성적증명서",
+      "지원자 여권",
+      "부모 여권",
+      "가족관계증명서",
+      "TOPIK 또는 TOEFL 성적표",
+      "자기소개서",
+      "학업계획서",
+      "아포스티유 인증 학력서류"
+    ],
+    "evaluation_ratio": {
+      "document": "70%",
+      "interview": "30%"
+    }
+  }
+]
